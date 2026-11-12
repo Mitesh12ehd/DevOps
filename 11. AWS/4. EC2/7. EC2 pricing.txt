@@ -1,0 +1,37 @@
+EC2 pricing:
+	- when we run out application on ec2 instance, aws charges for below things
+		1. Compute - ec2 instance itself
+		2. Storage - EBS volume and snapshots
+		3. Networking - data transferes and certain networking resources such as NAT gateway
+		4. Additional services - Load Balancer, monitoring, public ipv4 addresses, elastic ip etc.
+		
+	- pricing is also depends on instance type, region etc.
+	
+EC2 purchasing option:
+	1. On-Demand instances:
+		- pay for compute usage without making long-term commitment
+		- best for development, testing, unpredictable workload
+		- by default aws create on demand instances
+		
+	2. Reserved instances:
+		- Commit to specific EC2 usage attributes for a one- or three-year term in exchange for discounted pricing.
+		- best for stable, predictable workload
+		
+		- ex.
+			- If we are running ec2 instance with 
+				Instance family: m7i
+				size: large
+				Region: ap-south-1
+				Tenancy: default
+				OS: Linux
+			- we can purchase reserved instnace commitment for one or three years
+		
+		- //Standard and Convertible RIs have different flexibility rules.
+	
+	3. Saving plans:
+		- Commit to a consistent amount of eligible compute spend per hour for one or three years.
+		- Best for predictable compute usage when you want more flexibility than many Reserved Instance options offer.
+	
+	4. Spot instances:
+		- Use spare AWS capacity at a potentially substantial discount, with the possibility of interruption.
+		- Best for: fault-tolerant batch jobs, CI/CD workers, and scalable background processing.
