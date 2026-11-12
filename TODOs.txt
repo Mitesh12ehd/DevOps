@@ -1,0 +1,88 @@
+K8s:
+
+    Questions:
+    - How we will prevent pod to communicate to each other in same cluster?
+    - How k8s is orchestrates the containers?
+    - Load balancer in detail
+    - Application load balancer, network load balancer, when to use which ?
+
+Logs:
+
+    Question:
+    - basic parameter, attribute of log, 
+    - what should be in the log file
+        - timestamp
+        - user
+        - log type, DEBUG, PASS, FAIL
+
+    - if microservice A comminate with B, and B with C, 
+        and if you find failure in log of C,
+        how you will trace it back with application A
+
+AWS:
+    - AWS SDK and API's
+    - Cloudwatch
+    - RDS
+    - Route 53
+    - SNS and SQS
+    - VPC:
+        - VPC Peering
+        - VPC endpoint
+        - Transit gateway
+        - Direct connect
+        - Flow logs
+        - VPN
+    - ECS
+    - API gateway
+
+    - AWS Shield, AWS guardian
+    - AWS well architecture framework
+    - RPO RTO 
+    - EBS
+
+    Question:
+    - How we will connect multiple vpc?
+    - Landing zone
+    - Control tower
+    - to make secure application, what are aws security mechanism will you use?
+
+    - If s3 bucket monitoring show 1 TB occupied, but 
+        we have puttted 30 object only 
+        daily 1 object uploaded
+        and we have policy to cleanup object older than 30 days?
+        each object is exactly 1 sized only
+
+    - How you will determine communication between EC2 and S3 is public or private?
+    - How application will connect to s3 and get objects?
+    - What is storage classes in s3?
+    - What is sense of storage class, what is difference between data stored?
+    - How you will determine storage class for your application?
+    - What is difference between GP2 and GP3
+    - What is difference between console access and programmatic access
+
+CI-CD:
+
+    Question:
+    - have you used any security tools in your pipeline
+
+Other:
+    - Blue green deployment
+    - Nginx
+
+    Question:
+    - What is the difference between encoding and hashing
+
+Q&A:
+    Questions:
+	- What is your day to day task?
+		- checking dashboard and alert, if any spikes or event 
+		- i also spend time in infra setup, how can we improve existing infra 
+		- or if any app comes, how we can design that by keep in mind performance and cost
+		- checking docker containers, debugging containers for any issue or defects, 
+		- i also handle request for new environment setup, 
+		  configuring new setup, providing least principles
+		- we also maintain developer handbook and readmes of devops tasks
+
+	- How you were using AWS services on your current job?
+		- EC2, Load balancers, VPC, IAM 
+		- ECR, Cloudwatch
