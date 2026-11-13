@@ -1,0 +1,57 @@
+Shell script
+    - to avoid repetitive command manually execution on multiple place
+    - we write command in sequence into one file
+    - file have extension .sh
+
+Shell - sh - bash
+    Shell : it is program that interpret our command in terminal 
+
+    Different shell implementation:
+        1. sh (bourne shell) : /bin/sh
+        2. bash (bourne again shell) : /bin/bash
+            - improved version of sh
+            - default shell program in most of unix like system.
+
+Shebang line:
+	- how out shell script decide on which shell program we need to execute?
+    - using shebang
+    - in first line of shell script we define
+        #!/bin/bash
+        #!/bin/sh
+        #!/bin/zsh
+    - here #! are called shebang line.
+    - commonly used shebang line,
+    	- it takes path of bash from envrionment, instead of static path,
+      	- so it works on different machines
+    	- #!/usr/bin/env bash
+    	
+Comments:
+	- comment are started by #
+	- bash no supports multi line comments
+	
+Executing bash script:
+	1. bash script.sh
+		- shebang is not required as we have explicitly specified bash
+		- execution permission +x is not required on file
+		
+		bash -x script.sh
+			- it enable debugging and displayes command
+	
+	2. ./script.sh
+	   /home/mitesh/scripts/script.sh
+	   
+	   - require execute permission on file for current user
+	   - shebang is used here
+	   
+	3. source script.sh
+	   . script.sh
+	   
+	   - script executes on current shell
+	   - it doesn't create seperate process for the script
+	   - variables defined in the script remain available in your current shell.
+	   
+Bash syntax rules:
+	- each command start on new line 
+	- execute multiline commands in one line 
+		- using ;
+		- echo "Hello"; pwd; date

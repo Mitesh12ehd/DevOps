@@ -1,0 +1,56 @@
+& : Background execution
+    - it run command on Background
+
+    ex. sleep 5 &
+        - without & operator is stuck for 5 seconds
+        - with & operator it gives control of terminal back and run it on background
+        - also it print process id of task started
+        
+    - check background jobs
+        jobs
+    
+    - kill background task 
+        kill [pid]
+
+    ex. ping google.com &
+        - ping constantly print on terminal 
+        - if we don't want to see output on terminal 
+            ping google.com > /dev/null 2>&1 &
+    
+    ex. sleep 10 & echo "hello world"
+        run sleep 10 in background and echo "hello world" in terminal
+
+&& : execute second command only if first execute succeeded(return exit status 0)
+    echo "first" && echo "second"
+
+|| : execute second command only if first execute failed(return exit status 0)  
+    ls dummy || echo "Hello"    # if dummy directory not found, then print Hello
+
+! : not operator 
+    rm -r !(names.txt)  # remove all the files except names.txt
+
+groups command:
+    - command runs sequentially
+
+    1. Using { }:
+        - execute command in current shell
+
+
+        syntax: 
+            {
+                command1
+                command2
+            }
+
+        ex. 
+            echo "hello" && {
+                echo "hello"
+                echo "hello"
+            }
+
+            echo "hello" && { echo "hello"; echo "hello"; }
+
+    2. Using ( ):
+        - execute command in different shell environment
+
+        syntax: same except ( )

@@ -128,5 +128,3 @@ Difference between snap and apt
         - only for specific linux distribution (package type .deb)
         - manual updates
         - smaller installation size
-
-    
