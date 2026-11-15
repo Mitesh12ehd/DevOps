@@ -19,7 +19,7 @@ Benefits:
 Ways to use linux
     1. WSL
     2. Virtual box
-    3. onworks machines
+    3. on work machines
     4. cloud machines
 
 There are two types of linux distributions

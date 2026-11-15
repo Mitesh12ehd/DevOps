@@ -1,13 +1,3 @@
-whoami : 
-    find current user:
-        whoami > it print current user.
-
-du : disk usage
-    - displays the disk space used by files and directories
-
-    du - h # in human readable format
-    du new1/dir1
-
 head and tail:
     The head and tail commands are Unix/Linux utilities for viewing parts of files:
 
@@ -44,18 +34,6 @@ sort :
         sort -n numbers.txt  
         sort -nr numbers.txt    # numeric and reverse order
 
-jobs : 
-    show the process start by shell
-
-kill :
-    kill PID
-    ex. kill 789
-
-    - kill -9 [pid]
-
-uname:
-    give current os 
-
 zip and unzip:
     zip zippedFile.zip names.txt    # zip single file
                                     # this command also add file if zip already exist   
@@ -63,39 +41,7 @@ zip and unzip:
     unzip zippedFile.zip
     zip zippedFile.zip names.txt company.txt    # zip multiple files
 
-hostname: 
-    The hostname command shows or sets the system's hostname (computer name).
-
-    hostname        # display current hostname
-    hostname -i     # display Ip address
-    sudo hostname newname   # set hostname temporary
-
-domainname: 
-    - The domainname command displays or sets the system's NIS 
-      (Network Information Service) domain name.
-
-    domainname      # display current domain name
-    sudo domainname newdomain   # set domain name
-
-id : displays user and group identification information for the current user or a 
-     specified user.
-
-    id  # shows user id-name, group-id name and all the groups user belongs to
-    id -u   # shows the user id of current user
-    id -u john # shows the user id of john
-    id -g      # shows the primary group id
-    id -G      # show all the groups id
-
-    id -un      # Show username instead of UID
-    id -gn      # Show group name instead of GID
-    id -Gn      # Show all group names
-
-    # read about more option available
-
-lsof:   show all the open files with their user and process
-
-Execute multiple command sequentially: 
-    clear; sleep 5; echo "Hello"
+lsof:   show all the open files with their user and processk
 
 Input and output
     - every command built in 3 streams
@@ -112,13 +58,6 @@ Commands for hardware:
 
     1. top: 
         - to show running processes 
-    
-    2. df:
-        - df -h
-        - show disk space usage
-
-    3. free -h 
-        - show ram usage 
 
 wc:
     - word count
@@ -168,7 +107,6 @@ cut:
 tee:
     The tee command reads input from stdin, writes it to stdout (your terminal), and 
     simultaneously writes it to one or more files.
-
 
 nohup:
     - it used to store output of command 

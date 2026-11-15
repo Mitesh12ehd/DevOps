@@ -1,4 +1,9 @@
-Networking:
+domainname: 
+    - The domainname command displays or sets the system's NIS 
+      (Network Information Service) domain name.
+
+    domainname      # display current domain name
+    sudo domainname newdomain   # set domain name
 
 ping:
     - to check server, computer, router, website, etc. is reachable over the network.

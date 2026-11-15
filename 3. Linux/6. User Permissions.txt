@@ -131,3 +131,9 @@ More commands :
     groups          # display all the groups where current user belongs
 
     sudo useradd -G devops mitesh2  # Create user mitesh2 and assign secondary group.
+
+User id:
+    - Common convention:
+    - 0 - Root user
+    - 1-999 - Usually system/service users
+    - 1000+ - Usually regular users

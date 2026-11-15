@@ -1,0 +1,160 @@
+hostname:
+    - show system hostname
+
+hostname -i
+    - show private ip
+
+uname:
+    - to show system information
+
+    uname -a
+        Linux mitesh-ubuntu-pc 7.0.0-43-generic #43-Ubuntu SMP PREEMPT_DYNAMIC Fri Oct 23 13:25:25 UTC 2026 x86_64 GNU/Linux
+
+        - Kernel name: Linux
+        - Hostname: mitesh-ubuntu-pc
+        - Kernel release: 7.0.0-43-generic
+        - Kernel version: #43-Ubuntu
+        - SMP: it shows machine supports multiprocessing
+        - PREEMPT_DYNAMIC: Dynamic kernel preemption support
+        - Build date: Fri Oct 23 13:25:25 UTC 2026, Date and time this kernel was built
+        - Machine architecture: x86_64
+        - Operating system: GNU/Linux
+
+OS information:
+    - cat /etc/os-release
+
+uptime:
+    - give time from when machine is up
+    - give user logged in
+    - and system load average
+    
+    16:05:54 up  4:01,  1 user,  load average: 0.17, 0.38, 0.34
+
+    - 16:05:54: System time 
+    - up  4:01: uptime
+    - 1: 1 user logged in 
+    - 0.17: 1 minute load 
+    - 0.38: 5 minute load
+    - 0.34: 15 minute load
+
+    Load average:
+        - Load average represents the average number of tasks that are:
+        - Running or waiting for CPU time.
+
+whoami:
+    - shows current logged in username
+
+which:
+    - to find out location of program or application
+    - which bash 
+    - which python3
+    - which ls
+    - which java
+
+id:
+    - shows detail of current user
+    - uid=1000(mitesh) gid=1000(mitesh) groups=1000(mitesh),4(adm),24(cdrom),27(sudo),30(dip),46(plugdev),100(users),114(lpadmin),984(docker)
+
+    - userid: 1000 mitesh
+    - primary group id: 1000 mitesh
+    - groups:
+        - group this current user belongs to
+        - mitesh, adm, cdrom, sudo, docker etc.
+
+sudo:
+    - super user do
+    - it execute command with administrator permissions
+    - sudo is group
+    - any user which is part of sudo group can execute command with sudo level permissions
+    - id command shows current user is part of sudo group or not
+    
+shutdown, reboot:
+    - to perform its tasks
+    - we can also schedule by giving time parameter
+
+jobs:
+    - used to display jobs (processes) running or stopped in the background of your current 
+      shell session.
+    - if we run any command in background using & operator, we can see them in jobs
+
+kill:
+    - kill command is used to send signals to processes.
+    - mostly it is used to terminate a running process, but it can also pause, resume, or notify a process.
+
+    syntax:
+        kill [signal] [pid]
+
+    example:
+
+    # SIGTERM: signal 15 
+    # signal to terminate process gracefully
+    # Save data.
+    # Close open files.
+    # Release resources.
+    # Perform cleanup operations.
+    kill 1234
+
+    # SIGHUP: 1, hangup
+    # SIGINT: 2, Interrupt
+    # SIGQUIT: 3, quit
+    # SIGKILL: 9, forcefully terminate
+    # SIGTERM: 15, gracefully terminate
+    # SIGCONT: 18*, continue stopped process
+    # SIGSTOP: 19*, Stop process
+    # SIGTSTP: 20*, Terminal stop (Ctrl+Z)
+    kill -9 1234
+
+    ctrl + c:
+        - it produce SIGINT 2 signal
+
+id : displays user and group identification information for the current user or a 
+     specified user.
+
+    id  # shows user id-name, group-id name and all the groups user belongs to
+    id -u   # shows the user id of current user
+    id -u john # shows the user id of john
+    id -g      # shows the primary group id
+    id -G      # show all the groups id
+
+    id -un      # Show username instead of UID
+    id -gn      # Show group name instead of GID
+    id -Gn      # Show all group names
+
+    # read about more option available
+
+top:
+    - used to monitor running processes and system resource usage in real time.
+    - it shows
+        - which processes are currently running 
+        - which process consumes more cpu
+        - which process consumes more RAM
+        - How much CPU and memory are available
+        - System load and uptime.
+        - Process IDs (PIDs) and users running processes.
+
+    Monitor single process:
+        top -p [pid]
+
+# Command related to resources
+
+lscpu
+    - CPU count and other detail related to CPU
+
+free
+    - free command in Linux displays physical RAM and Swap memory usage.
+    - free -h # human readable format
+
+df
+    - how much disk available on filesystem
+    - df -h # for human readable format
+
+du
+    - The du command displays how much disk space files and directories consume.
+    - it shows for all the directory recursively from current directory 
+
+    - Display size of directory:
+        - using -s option
+        - du -sh /home/mitesh 
+        - du -sh .
+
+vmstat : Shows virtual memory status

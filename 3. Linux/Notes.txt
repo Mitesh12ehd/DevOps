@@ -1,8 +1,16 @@
 Command:
     - sleep
     - jobs
-
+    - lsof, sudo lsof -i :port
 Understand 
     - ping google.com > /dev/null 2>&1 &
 
+Command execution pass fail codes
+
 exit:
+
+    System level commands:
+
+    - who:
+        - shows user logged in and their activity 
+        - ex. when used logged in etc.
