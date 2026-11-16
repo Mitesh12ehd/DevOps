@@ -2,6 +2,8 @@ Command:
     - sleep
     - jobs
     - lsof, sudo lsof -i :port
+    - ps, ps aux
+    
 Understand 
     - ping google.com > /dev/null 2>&1 &
 
