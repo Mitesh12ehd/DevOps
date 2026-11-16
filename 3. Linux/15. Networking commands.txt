@@ -77,8 +77,160 @@ traceroute and tracepath
     - client --> ISP --> DNS server,it resolve the youtube.com to ip address --> youtube server
 
 ss:
-    - Check listening ports and connections
+    - Check listening ports and connections on your machine
+    - Updated command of netstat
     - ss -tulnp
+
+curl:
+    - to hit api endpoints
+
+    options:
+        X:
+            - to specify request type
+            - GET is default type
+
+        H:
+            - to send header with request
+        
+        d:
+            - to send body with request
+
+        s:
+            - silent mode
+            - to avoid progress bar
+
+        L:
+            - it show redirected response 
+            - without this option we see response that is show redirection
+
+        o:
+            - to save output to file
+            - curl -sL https://deb.nodesource.com/setup_22.x -o nodesource_setup.sh
+
+
+    - jq tool:
+        - to format json
+        - <output> | jq
+        - use silent mode while using with curl, because curl progress bar output is also given to 
+          jq and it leads to error
+
+wget : 
+    - to download files from servers(URLs)
+
+    ex. 
+
+    1. wget https://ontheline.trincoll.edu/images/bookdown/sample-local-pdf.pdf
+        # download pdf in current directory
+
+    2. give our choice name
+        wget -o myPDF1.pdf https://ontheline.trincoll.edu/images/bookdown/sample-local-pdf.pdf
+        
+dig:
+    - DNS lookup tool used to query DNS servers and retrieve DNS records.
+    	- Find the IP address associated with a domain.
+		- Check whether DNS records are configured correctly.
+		- Troubleshoot domain resolution issues.
+		- Identify which DNS server is responding.
+		- Check different DNS record types (A, AAAA, MX, NS, TXT, CNAME).
+		- Verify DNS propagation and DNS changes.
+    
+    - Syntax
+    	dig [options] [DNS-server] domain [record-type]
+    	
+    - If you don't specify a record type, dig queries the A record by default.
+    
+    example: dig google.com
+    	;; QUESTION SECTION:
+		;google.com.                    IN      A
+		
+		;; ANSWER SECTION:
+		google.com.             0       IN      A       142.250.193.46
+		
+		;; Query time: 0 msec
+		;; SERVER: 172.31.176.1#53(172.31.176.1) (UDP)
+		;; WHEN: Mon Nov 16 09:46:25 UTC 2026
+		;; MSG SIZE  rcvd: 54
+    
+    	Question:
+    		- it tell what you asked to DNS server
+    		- google.com: domain begin queries
+    		- IN: Internet domain class
+    		- A: Record type(IPv4 address)
+    		
+    	Answer:
+    		- it shows resolved ipv4 address
+    		
+    	DNS server information:
+    		- 172.31.176.1 : DNS server ip address, your machine sent request to this dns server
+    		- 53: DNS port
+    		- UDP: Protocol used for query
+    		
+    		- check which DNS server your system conigured with
+    			cat /etc/resolv.conf
+
+nc:
+	- Netcat
+	- usede to establish network connection, test ports, send and receive data, trobuleshoot network connectivity
+	- use cases:
+		Checking whether a remote server's port is reachable.
+		Testing whether an application is listening on a particular port.
+		Troubleshooting firewall and security group rules.
+		Testing TCP and UDP connectivity.
+		Sending data between two machines.
+		Checking whether a service is accessible without using a browser.
+		
+	- Syntax:
+		nc [options] [hostname/IP] [port]
+		
+	- Option:
+		-z: Check connectivity without sending application data.
+		-v: verbose mode, show connection details
+		
+	- Example: Checking connection and listening ports.
+		nc -v google.com 443
+			- attempt to establish TCP connection to google.com on port 443(HTTPS)
+		
+		check port is open or not
+			nc -zv 13.201.10.20 8080
+			
+			Refused:
+			- if connection is refused, firewall is refusing it by its rules
+			
+			Timeout:
+			- possible reasons are 
+				- aws security group is blocking traffic
+				- NACL is blocking traffic
+				- Host firewall is dropping packets
+				- Network routing issue
+				- Destination is unreachble
+				
+		check range of port
+			nc -zv 13.201.10.20 20-100
+			
+		set connection timeout for 3 seconds
+			- sometime connection takes to long
+			- using -w
+			nc -zv -w 3 google.com 443
+			
+		Check local application is running
+			nc -zv 127.0.0.1 8080
+			
+	- Example: TCP connection between two machines:
+		Machine A: server
+			192.168.1.10
+			Listening on 5000
+		Machine B
+			Client
+			192.168.1.20
+			
+		1. On machine A:
+			nc -l 5000
+			- l means listen mode, on 5000 port it wait for connection
+			
+		2. On machine B:
+			nc 192.168.1.10 5000
+			- now we have interactive connection
+			- if we type something here it will show there.
 
 // ------------------
 
@@ -88,10 +240,6 @@ domainname:
 
     domainname      # display current domain name
     sudo domainname newdomain   # set domain name
-
-netstat or ss:
-    - both are same command
-    - it shows all active internet connections on system
 
 mtr:
     - my trace route
@@ -139,56 +287,11 @@ telnet:
 iwconfig
     - to show wireless device connected
 
-dig:
-    - DNS lookup tool used to query DNS servers and retrieve DNS records.
-
 whois:
     - to show details related to domain name
     - domain, registry, where it is purchased from, date, expiry 
 
-curl:
-    - to hit api endpoints
 
-    options:
-        X:
-            - to specify request type
-            - GET is default type
-
-        H:
-            - to send header with request
-        
-        d:
-            - to send body with request
-
-        s:
-            - silent mode
-            - to avoid progress bar
-
-        L:
-            - it show redirected response 
-            - without this option we see response that is show redirection
-
-        o:
-            - to save output to file
-            - curl -sL https://deb.nodesource.com/setup_22.x -o nodesource_setup.sh
-
-
-    - jq tool:
-        - to format json
-        - <output> | jq
-        - use silent mode while using with curl, because curl progress bar output is also given to 
-          jq and it leads to error
-
-wget : 
-    - to download files from servers(URLs)
-
-    ex. 
-
-    1. wget https://ontheline.trincoll.edu/images/bookdown/sample-local-pdf.pdf
-        # download pdf in current directory
-
-    2. give our choice name
-        wget -o myPDF1.pdf https://ontheline.trincoll.edu/images/bookdown/sample-local-pdf.pdf
 
 watch:
     - to show output of command every 2 second
