@@ -1,3 +1,87 @@
+ping:
+    - check server, machine, is reachable over the network
+    - it uses ICMP protocol (Internet control message protocol)
+
+    ex. 
+        ping google.com
+        ping [hostname]
+        ping [ip]
+
+    - ping to 4 packets:
+        - ping -c 4 google.com
+
+ip addr or ip address:
+    - shows private ip, network interfaces, MAC address, Interface status
+    - here private ip is 10.131.210.120/24
+
+    o/p:
+        1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+            link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+            inet 127.0.0.1/8 scope host lo
+            valid_lft forever preferred_lft forever
+            inet6 ::1/128 scope host noprefixroute 
+            valid_lft forever preferred_lft forever
+        2: wlp1s0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP group default qlen 1000
+            link/ether 14:13:33:e7:34:03 brd ff:ff:ff:ff:ff:ff
+            altname wlx141333e73403
+            inet 10.131.210.120/24 brd 10.131.210.255 scope global dynamic noprefixroute wlp1s0
+            valid_lft 3100sec preferred_lft 3100sec
+            inet6 2409:40c1:10d1:cf82:61a1:4d9c:c2fc:38d9/64 scope global temporary dynamic 
+            valid_lft 6705sec preferred_lft 6705sec
+            inet6 2409:40c1:10d1:cf82:655f:f364:ee02:1fe8/64 scope global dynamic mngtmpaddr noprefixroute 
+            valid_lft 6705sec preferred_lft 6705sec
+            inet6 fe80::8e59:6293:16b2:306b/64 scope link noprefixroute 
+            valid_lft forever preferred_lft forever
+
+    - it shows there is two network interface
+    - 1. loopback: your own machine 
+    - 2. wifi
+
+ip route:
+    - to view routing table
+
+    default via 10.131.210.201 dev wlp1s0 proto dhcp src 10.131.210.120 metric 600 
+    10.131.210.0/24 dev wlp1s0 proto kernel scope link src 10.131.210.120 metric 600 
+
+    Your Ubuntu (10.131.210.120)
+            |
+            v
+    Wi-Fi interface (wlp1s0)
+            |
+            v
+    Default Gateway (10.131.210.201)
+            |
+            v
+    Internet / Destination Server
+
+    - when accessing another machine on the same network (ex. private ip: 10.131.210.150)
+
+    Your Ubuntu (10.131.210.120)
+            |
+            v
+    Wi-Fi interface (wlp1s0)
+            |
+            v
+    Destination (10.131.210.150)
+
+ifconfig:
+    - older command to fulfill functionality of ip address command
+
+traceroute and tracepath
+    - Shows the intermediate network hops between your machine and the destination.
+    - use when 
+        - server is reachable but slow
+        - if you have doubt is routing issue
+        - if you need to identify where packet stop progressing
+
+    - client --> ISP --> DNS server,it resolve the youtube.com to ip address --> youtube server
+
+ss:
+    - Check listening ports and connections
+    - ss -tulnp
+
+// ------------------
+
 domainname: 
     - The domainname command displays or sets the system's NIS 
       (Network Information Service) domain name.
@@ -5,39 +89,9 @@ domainname:
     domainname      # display current domain name
     sudo domainname newdomain   # set domain name
 
-ping:
-    - to check server, computer, router, website, etc. is reachable over the network.
-    - ping <hostname-or-ip>
-
 netstat or ss:
     - both are same command
     - it shows all active internet connections on system
-
-ifconfig:
-    - interface configuration
-    - shows ipv4 and ipv6 address for each network interface
-    - also shows other information
-
-    - ex.
-        - if docker is running, it has own network interface
-        - if machine is ec2, there is eth network interface
-            which is used to connect ec2 to network
-
-        - lo
-            - loopback
-            - it is network which is used to enable localhost
-            - ip of lo network interface is 127.0.0.1
-
-traceroute and tracepath:
-
-    How we will receive response from server?
-        - client --> ISP --> DNS server,it resolve the youtube.com to ip address --> youtube server
-        - so it is route
-
-    - traceroute command is used trace that route
-    
-    ex. traceroute youtube.com
-        - we can see the ip in output , in which one of the ip is data center of google/youtube
 
 mtr:
     - my trace route
@@ -81,24 +135,6 @@ telnet:
     - 443 vs 80:
         - 443 is https port
         - 80 is http port
-
-hostname:
-    - used to find hostname of machine
-    - also used to change hostname
-        sudo hostname new-hostname              # reset after reboot
-        sudo hostnamectl set-hostname new-hostname             # permanent
-
-    /etc/hosts:
-        - it is file that map ip to hostnames
-        - ex. 
-            127.0.0.1 localhost
-            127.0.1.1 mitesh-ubuntu-pc
-
-        - it we want to change localhost to example.com, we do it in locally
-
-ip:
-    - ip addr show
-    - to show ip
 
 iwconfig
     - to show wireless device connected

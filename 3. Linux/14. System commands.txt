@@ -1,8 +1,13 @@
 hostname:
     - show system hostname
 
-hostname -i
-    - show private ip
+    /etc/hosts:
+        - it is file that map ip to hostnames
+        - ex. 
+            127.0.0.1 localhost
+            127.0.1.1 mitesh-ubuntu-pc
+
+        - it we want to change localhost to example.com, we do it in locally
 
 uname:
     - to show system information
