@@ -15,3 +15,12 @@ Redirect:
 
     < : input redirection
         sort < file.txt         # Use file as input
+        
+tee:
+    - The tee command reads input from stdin, writes it to stdout (your terminal), and 
+      simultaneously writes it to one or more files.
+    - one copy goes to the terminal
+    - one copy goes to the file
+    
+    # Print Hello Linux and also add in file
+    	echo "Hello Linux" | tee output.txt

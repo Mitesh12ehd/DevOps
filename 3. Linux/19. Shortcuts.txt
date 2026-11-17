@@ -19,9 +19,3 @@
 
 6. clear terminal
     clear
-
-7. Run multiple command
-    by colon :
-
-    ex. 
-    git add.:git commit -m "intial commit":git push origin main

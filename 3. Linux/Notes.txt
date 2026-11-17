@@ -3,11 +3,14 @@ Command:
     - jobs
     - lsof, sudo lsof -i :port
     - ps, ps aux
+    - lsof
     
 Understand 
     - ping google.com > /dev/null 2>&1 &
 
 Command execution pass fail codes
+Create one file for text processing commands
+search for linux concept and command that is remaining
 
 exit:
 
@@ -28,3 +31,19 @@ watch:
 
     ex.
         watch top
+        
+:
+	- null command, its exit status
+
+Input and output
+    - every command built in 3 streams
+
+    STDIN(0) : Standard input
+    STDOUT(1) : Standard output
+    STDERR(2) : Standard error
+
+    ex.
+        ls -l doesnotexist.txt
+        # output it giving is error message
+        
+lsof:   show all the open files with their user and process

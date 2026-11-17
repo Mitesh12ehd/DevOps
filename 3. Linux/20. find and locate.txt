@@ -57,8 +57,9 @@ find :
 
     # find empty file
     find . -empty
-
-# explore more on internet about both command and their various options
+    
+    # Count file of specific extenstion 
+    find /home/mitesh/ -maxdepth 1 -type f -name "*.txt" | wc -l
 
 Multiple file operations:
     Delete multiple txt files 

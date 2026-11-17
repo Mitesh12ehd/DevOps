@@ -54,3 +54,8 @@ groups command:
         - execute command in different shell environment
 
         syntax: same except ( )
+
+Executing multiple command by ;
+	
+	# execute sequentially
+	echo "Hello"; echo "World"; pwd
