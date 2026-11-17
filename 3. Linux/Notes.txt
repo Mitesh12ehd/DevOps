@@ -16,3 +16,15 @@ exit:
     - who:
         - shows user logged in and their activity 
         - ex. when used logged in etc.
+        
+ps aux:
+    - show which process is running on which port
+    - also shows resources consumed by process
+   
+watch:
+    - to show output of command every 2 second
+    - configure time
+        watch -n 5 top
+
+    ex.
+        watch top

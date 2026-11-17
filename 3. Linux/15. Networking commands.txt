@@ -231,79 +231,94 @@ nc:
 			nc 192.168.1.10 5000
 			- now we have interactive connection
 			- if we type something here it will show there.
+			
+tcpdump:
+	- it capture and displays network packes flowing through network interface
+	- syntax: sudo tcpdump [options] [filter]
 
-// ------------------
+	- Capture all network traffic
+		sudo tcpdump
+		o/p: 15:30:10.123456 IP 192.168.1.10.54321 > 142.250.183.14.443: Flags [S], seq 12345, win 64240
+			- 15:30:10: packet timestamp
+			- IP: ipv4 packet
+			- 192.168.1.10.54321: Source IP and port
+			- 142.250.183.14.443: Destination IP and port
+			- Flags [S] : TCP Syn flag
+			- seq 12345: TCP sequence number
+			
+	- List available network interface
+		sudo tcpdump -D
+	
+	- Capture traffic from particular interface
+		sudo tcpdump -i eth0
+		
+	- Filter:
+		# Capture packets where this ip is source or destination
+		sudo tcpdump host 192.168.1.10
+		
+		# Capture packet where this ip is source
+		sudo tcpdump src host 192.168.1.10
+		
+		# Capture packet where this ip is destination
+		sudo tcpdump dst host 192.168.1.10
+		
+		# filter by port
+		sudo tcpdump port 80
+		sudo tcpdump src port 8080
+		sudo tcpdump dst port 8080
 
 domainname: 
     - The domainname command displays or sets the system's NIS 
       (Network Information Service) domain name.
+    - for personal pc it is none, for orgnization pc there is domainname
 
     domainname      # display current domain name
-    sudo domainname newdomain   # set domain name
 
 mtr:
     - my trace route
-    - it do ping and also shows path
-    - ex. mtr youtube.com
+    - combination of ping and traceroute
 
 nslookup:
     - name server lookup
     - find ip address of domain name
-
-    example:
-        mitesh@mitesh-ubuntu-pc:~/Desktop/linux$ nslookup trainwithshubham.com
-            Server:		127.0.0.53
-            Address:	127.0.0.53#53
-
-            Non-authoritative answer:
-            Name:	trainwithshubham.com
-            Address: 15.197.225.128
-            Name:	trainwithshubham.com
-            Address: 3.33.251.168
-            Name:	trainwithshubham.com
-            Address: 64:ff9b::fc5:e180
-            Name:	trainwithshubham.com
-            Address: 64:ff9b::321:fba8
-
-        - first server and address is related to dns server that resolved our query
-        - then all the ipv4 are ip of server where response comes from
-        - due to url is hosted at multiple server we receive multiple answer.
-
-    - it also shows private ip, which we can't connect with telnet command
-
-telnet:
-    - telnet is a network utility used to establish a TCP connection to a remote host on a 
-      specific port.
-    - syntax:
-        telnet <host> <port>
-
-    ex. telnet trainwithshubham.com 80
-        telnet trainwithshubham.com 443
+    - used to query dns server
     
-    - 443 vs 80:
-        - 443 is https port
-        - 80 is http port
-
-iwconfig
-    - to show wireless device connected
+    - Query DNS server
+    	nslookup github.com
+    	
+    	o/p:
+			;; Got recursion not available from 172.31.176.1
+			Server:         172.31.176.1
+			Address:        172.31.176.1#53
+			
+			Non-authoritative answer:
+			Name:   github.com
+			Address: 4.186.157.192
+			
+	- Query specific type of records
+		nslookup -type=A google.com
 
 whois:
     - to show details related to domain name
     - domain, registry, where it is purchased from, date, expiry 
-
-
-
-watch:
-    - to show output of command every 2 second
-    - configure time
-        watch -n 5 top
-
-    ex.
-        watch top
+    - whois google.com
 
 nmap:
-    - to scan the website 
-    - it shows which ports are open on that ip or domain
+	- used to discover hosts on a network, identify open ports, detect running services
+    - it also shows which ports are open on that ip or domain
 
-    ex.
-        nmap trainwithshubham.com
+   	- Scan server
+   		# Scans the most common 1,000 TCP ports of the target.
+   		nmap 192.168.1.10
+   		nmap github.com
+   		
+   	- Scan multiple server
+   		nmap 192.168.1.10 192.168.1.20
+   		
+   	- Scan entire subnet
+   		nmap 192.168.1.0/24
+   		
+   	- Scan specific port
+   		nmap -p 80 192.168.1.10
+   		nmap -p 22,80,443,8080 192.168.1.10
+   		nmap -p 1-1000 192.168.1.10
