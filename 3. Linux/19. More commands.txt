@@ -1,0 +1,61 @@
+zip and unzip:
+    zip zippedFile.zip names.txt    # zip single file
+                                    # this command also add file if zip already exist   
+    # Compress all files                  	              
+    zip bakup.zip * 
+    
+    # Compress all files with given extenstion
+    zip logs.zip *.log	# compress all the log files
+    
+    # Compress directory
+    zip -r project.zip project/
+
+    unzip zippedFile.zip
+    zip zippedFile.zip names.txt company.txt    # zip multiple files
+
+nohup:
+	- no hang up
+	- used to run a command or process that continues executing even after the user logs out or the terminal session is closed.
+    
+    Without nohup:
+    	- ./backup.sh
+    	- normally shell sends SIGNUP singla to jobs when session ends, this can cause process to terminate
+   
+   	With nohup:
+   		- to prevent this, we use nohup
+   		- nohup ./backup.sh 
+   		- This makes the command ignore the SIGHUP signal.
+   		- Add & to run in background
+   		
+   	Syntax:
+   		nohup command
+   		
+   	Where nohup save the output?
+   		- it redirect standard output and standard error to file names nohup.out
+   		- file is present in the directory from where you ran command
+   		
+   	Redirect output to a custom log file
+   		nohup ./backup.sh > backup.log 2>&1 &
+   		
+   		- Monitor the log continuesly:
+   			tail -f backup.log
+    
+    - it used to store output of command 
+    - it also append output
+         
+    ex.
+        nohup free -h 
+        # it create nohup.out file
+        
+history : it shows all the commands we have performed till now.
+    
+    1. history : Give all the previous commands
+
+    2. history | grep "ls -l"
+        Give all the command which have ls -l
+
+    3.  to search the command 
+        - press key CTRL + R
+        - type command
+        - see suggestions
+        - hit enter to hit these command that are present in suggestions.

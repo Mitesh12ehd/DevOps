@@ -59,3 +59,11 @@ Executing multiple command by ;
 	
 	# execute sequentially
 	echo "Hello"; echo "World"; pwd
+	
+Input and output
+    - each command have input and output
+    - we can use output of one command as input of another command  
+
+Pipe character :
+    - to give output of one command as input of another command
+    - history | less

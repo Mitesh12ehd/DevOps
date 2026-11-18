@@ -1,0 +1,293 @@
+less : 
+    - to display output of command in pagination
+    - helps when printing large files.
+
+    next page : space or f
+    prev page : b
+    scroll down : bottom arrow
+    scroll up : upper arrow
+    start of file : g
+    end of file : G
+
+	Examples:
+	    cat /var/log/syslog | less
+	    ls /user/bin | less
+	    history | less
+	    
+tr : translate or delete characters
+
+    1. echo "hello world" | tr 'a-z' 'A-Z'
+        # output : HELLO WORLD
+
+       echo "Hello World" | tr 'A-Z' 'a-z'
+        # output : Hello World
+
+       echo "hello" | tr 'el' 'ax'
+        # Output: haxxo (e→a, l→x)
+
+    2. cat file1.txt | tr 'a-z' 'A-Z'
+        # all content will be capitalized
+
+    3. cat file1.txt | tr 'a-z' 'A-Z' > newFile.txt
+        # store capitalize content of file1 to newFile.txt
+
+    4. deletion of characters
+        echo "hello123world" | tr -d '0-9'
+        # Output: helloworld
+
+        echo "a,b,c,d" | tr -d ','
+        # Output: abcd
+        
+locate:
+    - it is a fast find search utility that find files and directories by name and 
+      pre-built database.
+    - by default it is not installed, we need to install separately.
+    - syntax: locate [options] filename
+    
+    Note:
+    	- Sometime newly craeted file, or moved file is not showed correctly,
+    	- Update db:
+    		sudo updatedb
+
+    ex.
+    	- Search file 
+    		# show all the lcoation where config.txt is present, it show all the path where contains Notes.txt
+    		locate Notes.txt
+    	
+    	- case insensitive
+    		locate -i notes.txt
+    		
+    	- Exact file matching
+    		locate -b '\Notes.txt'
+    		
+    	- Limit results
+    		locate -n 5 Notes.txt
+    	
+    	- Count result
+    		locate -c Notes.txt
+    	
+    	- show all txt file
+    		locate file1.txt
+
+find :
+    - it is slow compare to locate command
+    - by default it is installed, we don't need to install separately.
+    - syntax: find [starting path] [conditions] [actions]
+    	- from starting path it will start search, and check all current and subfolders
+	
+	- Search config in /home directory
+		find /home -name "Config.txt"
+	
+	- Case insensitive
+		find /home -iname "test.txt"
+	
+	- Wildcard
+		- Find all file end with .txt
+			find /home -name "*.txt"
+			
+		- Find starting with test
+			find /home -name "test*"
+		
+		- contains
+			find /home -name "*config*"
+		
+		- Names starting with app and ending with .conf
+			find /etc -name "app*.conf"
+			
+		- ? means 1 character 
+			find /home -name "file?.txt"
+			
+	- Searching by file type
+		find . -type f -name "file1.txt"
+		
+	- Search upto specific depth in subdirectory or start from specific depth
+		find /home -type f -maxdepth 1
+		find /home -type f -mindepth 2
+		
+	- Search by file size
+		# Files exactly 100 MB (rounded in find's size units)
+		find /home -type f -size 100M
+		# Files larger than 100 MB
+		find /home -type f -size +100M
+		# Files smaller than 100 MB
+		find /home -type f -size -100M
+		# Files larger than 1 GB
+		find / -type f -size +1G
+		
+	- Search by modification time
+		# Modified within the last 24 hours
+		find /home -type f -mtime -1
+		# Modified more than 7 days ago
+		find /home -type f -mtime +7
+		# Modified exactly 2 periods of 24 hours ago
+		find /home -type f -mtime 2
+		# Modified within the last 30 minutes
+		find /var/log -type f -mmin -30
+		
+	- Search by permission
+		# Files with exactly 777 permissions
+		find /home -type f -perm 777
+		# Files with at least all owner/group/other execute bits set
+		find /home -type f -perm -111
+		# Files having any execute bit set
+		find /home -type f -perm /111
+		
+	- Search by user and group
+		# Files owned by user mitesh
+		find /home -user mitesh
+		# Files owned by group developers
+		find /home -group developers
+		# Files not owned by mitesh
+		find /home -not -user mitesh
+
+    find .   # shows all the things in current directory and also inside it.
+    find ..  # shows all the things in parent directory
+    
+    - find empty file 
+		find /home -empty
+		
+	- Multiple condition
+		- by default condition are combined by AND
+			find /home -type f -name "*.txt"
+			
+		- using OR
+			find /home -name "*.log" -o -name "*.txt"
+			
+		- using parentheses
+			find /home -type f \( -name "*.log" -o -name "*.txt" \)
+			
+		- using NOT
+			find /home -type f ! -name "*.log"
+			
+	- Execute command on found files
+		- it will execute command on each files
+		- find /path [conditions] -exec command {} \;
+		
+		\; execute seprately for each file
+		+ execute multiple files together
+
+		# Display details of found files
+		find /var/log -type f -name "*.log" -exec ls -lh {} \;
+		find /var/log -type f -name "*.log" -exec ls -lh {} +
+
+head and tail:
+    The head and tail commands are Unix/Linux utilities for viewing parts of files:
+
+    head:
+        head file.txt           # Shows first 10 lines
+        head -n 5 file.txt      # Shows first 5 lines
+        head -20 file.txt       # Shows first 20 lines
+        head -c 100 file.txt    # Shows first 100 bytes
+
+    tail:
+        tail file.txt           # Shows last 10 lines
+        tail -n 5 file.txt      # Shows last 5 lines
+        tail -20 file.txt       # Shows last 20 lines
+        tail -f logfile.txt     # Continuously shows new lines added to file
+
+diff:
+    compares files line by line and shows the differences between them
+
+sort :
+    organizing data in ascending or descending order based on various criteria
+
+    sort file.txt     # Sort lines alphabetically(lexographically)
+    sort file1.txt file2.txt            # Sort combined contents of both files
+    sort *.txt                          # Sort all .txt files together
+        
+    sort with pipe : 
+        ls | sort                           # Sort directory listing
+        cat file.txt | sort                 # Sort file contents via pipe
+
+    reverse order:  
+        sort -r file.txt
+
+    numeric:
+        sort -n numbers.txt  
+        sort -nr numbers.txt    # numeric and reverse order
+        
+wc:
+    - word count
+    - to count words, character, lines of the file content or output
+    
+    - Count line number in file    
+    	wc file1.txt
+    	
+    	o/p: 10  50  300 file.txt
+    		- lines, words, bytes, filename
+    
+    - Count lines
+    	wc -l file.txt
+   	- Count words
+   		wc -w file.txt
+   	- Count bytes
+   		wc -c file.txt
+   	- Count char
+   		wc -m file.txt
+    	
+    - Use with other command
+    	find /home/mitesh/ -maxdepth 1 -type f -name "*.txt" | wc -l
+    
+    - count docker containers
+    	docker ps -q | wc -l
+
+cut:
+    - to get specific part from file content
+    - it is useful with 
+    	- csv and delimited files
+    	- linux configuration files
+    	- log files
+    	- command output
+    	- user and system information
+    - command works line by line
+    - postion count start from 1 index
+	
+	- get first char from each line
+		cut -c 1 file.txt
+	
+    - get first 5 character from each line
+        cut -c 1-5 filename.txt
+    
+    - Characters from position 3 onwards
+    	cut -c 3- file.txt
+    	
+    - First 3 characters and character 6
+    	cut -c 1-3,6 file.txt
+
+    - get specific character:
+        cut -c 1,3,5 original.txt
+
+    - extract by delimiter and field(-d and -f)
+    	- we can also delimate by space ' '
+
+        Suppose /etc/passwd contains:
+            root:x:0:0:root:/root:/bin/bash
+            ubuntu:x:1000:1000:Ubuntu:/home/ubuntu:/bin/bash
+
+        Get usernames:
+            cut -d ':' -f 1 /etc/passwd
+
+            -f1 extract first field
+
+            Output:
+                root
+                ubuntu
+
+        Get Home Directories
+            cut -d ':' -f 6 /etc/passwd
+
+            Output:
+                /root
+                /home/ubuntu
+
+        Extract Multiple Fields:
+
+            file: data.csv
+                John,25,Ahmedabad
+                Alice,30,Mumbai
+
+            cut -d ',' -f 1,3 data.csv
+            cut -d ',' -f 1-3 data.csv       # to get range of field
+            
+	- Extract process IDs
+		ps -ef | tr -s ' ' | cut -d ' ' -f 2
