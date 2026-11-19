@@ -59,3 +59,75 @@ history : it shows all the commands we have performed till now.
         - type command
         - see suggestions
         - hit enter to hit these command that are present in suggestions.
+        
+ps:
+	- process status
+	- Unlike top and htop, which continuously refresh process information,
+	  ps displays a snapshot of processes at the time you execute the command.
+	  
+	- syntax:
+		ps [option]
+		
+	- o/p:
+		 PID  TTY          TIME CMD
+	     1250 pts/0    00:00:00 bash
+	     1305 pts/0    00:00:00 ps
+	     
+	- show all process running on system
+		ps -e
+
+	- show full details
+		ps -f
+			
+		UID       PID  PPID  C STIME TTY          TIME CMD
+		user     1250  1200  0 18:30 pts/0    00:00:00 bash
+		user     1305  1250  0 18:35 pts/0    00:00:00 ps -f
+		
+		- PID is process id
+		- PPID is parent process id
+		
+	- ps aux
+		Displays detailed information about processes across the system.
+	
+	- check information about specific process
+		ps -p 1250
+	
+	- Show process consuming high memory
+		ps aux --sort=-%mem | head -6
+		
+sleep
+	- to pause the execution for specified time
+	- syntax: sleep NUMBER[SUFFIX]
+		- suffix s-second, m-minutes, h-hours, d-days
+		- default not specified is seconds
+		
+	ex. sleep 10
+		sleep m
+		
+lsof:
+	- List open files
+	- identify which processes have files, directories, network sockets, or other resources open.
+	- syntax: lsof [options]
+	
+	- Find which process is using particular file
+		lsof /var/log/syslog
+		
+	- Find file opened by particular process
+		lsof -p 1234
+		
+	- Find process running on specific port
+		sudo lsof -i :8080
+	
+	- Find listening ports
+		sudo lsof -i -P -n | grep LISTEN
+		
+watch:
+	- execute command repeatedly at fixed time interval
+	- By default, watch executes the command every 2 seconds.
+	- syntax: watch [options] command
+	
+	- check date every 2 second
+		watch date
+		
+	- every 5 second
+		watch -n 5 date

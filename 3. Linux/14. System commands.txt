@@ -139,6 +139,13 @@ top:
 
     Monitor single process:
         top -p [pid]
+        
+htop:
+	- more user friendly
+	- UI friendly
+	- color-coded utilization
+	- keyboard shortcuts
+	- search, filter, kill processes
 
 # Command related to resources
 

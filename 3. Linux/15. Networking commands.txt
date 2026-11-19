@@ -80,6 +80,9 @@ ss:
     - Check listening ports and connections on your machine
     - Updated command of netstat
     - ss -tulnp
+    
+    - check specific port is occupied by which process
+    	sudo ss -tulpn | grep 3000
 
 curl:
     - to hit api endpoints
