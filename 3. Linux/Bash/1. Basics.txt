@@ -51,7 +51,21 @@ Executing bash script:
 	   - variables defined in the script remain available in your current shell.
 	   
 Bash syntax rules:
-	- each command start on new line 
-	- execute multiline commands in one line 
-		- using ;
-		- echo "Hello"; pwd; date
+	Case sensitive: 
+		- bash is case sensitive language
+	
+	Variable quating rules:
+		' ' : Literal string, no variable value replacement, value stored as it as
+		""  : allow variable value substitution
+		
+	Escape chracters:
+		- A backslash (\) is used to escape special characters or continue a command onto another line.
+		- echo "Hello \"Mitesh\""	# Hello "Mitesh"
+	
+		- Line continue
+			echo "This is very long \
+			command
+			"
+			
+			aws ec2 create-instance \
+				--type=t3.micro

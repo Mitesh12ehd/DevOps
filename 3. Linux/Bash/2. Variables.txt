@@ -1,0 +1,221 @@
+Declaring variable and initialization:	
+	name="Mitesh"		# safe way , commonly used
+	name=Mitesh			# works only when no spaces is there
+	valid=true			# true is stored as string, no boolean data type is there
+	age=25
+	port=8080
+	
+	Rules:
+		- No space around =
+		- variable generally treated as strings but bash supports integer airthmetic in operations
+		
+	- Assigning output of command
+		current_date=$(date)
+		current_user=$(whoami)
+		disk_usage=$(df -h)
+		
+	- Assigning output of arithmetic operation
+		a=10
+		b=20
+		sum=$((a + b))
+		
+Accessing variables:
+	- using $name and ${name}
+	- Prefer ${name}
+		
+	- What is difference?
+		name="Mitesh"
+		echo "$name_devops"	
+		- it consider name_devops as variable name, it doesn't exist so output is empty
+		
+		echo "${name}_devops"
+		- print Mitesh_devops
+		
+Variable naming rules:
+	Can contain letters	name
+	Can contain numbers	server1
+	Can contain underscores	app_name
+	Cannot start with a number	1server is invalid
+	Cannot contain hyphens	app-name is invalid
+	Cannot contain spaces	app name is invalid
+	Case-sensitive
+
+Empty variable and unset variable
+	empty: variable exist but contains no value or empty value
+	unset: variable doesn't exist
+		unset variable_name		# it removes variable
+
+	Check variable is set or not?
+		if [ -v variable_name ]; then
+			echo "Variable is set"
+		else
+			echo "Variable is not set"
+		fi
+	
+	Check variable is empty
+		if [ -z "$variable" ]; then
+			echo "Variable is empty"
+		else
+			echo "Variable is not empty"
+		fi
+	
+	Check variable is not empty
+		name="Mitesh"
+		if [ -n "$name" ]; then
+			echo "Variable contains a value"
+		fi
+
+	Common use case: Check variable unset and empty
+		if [ -z "${APP_NAME:-}" ]; then
+			echo "APP_NAME is missing"
+    		exit 1
+		fi
+		echo "Application: $APP_NAME"
+
+		:- is a Bash parameter expansion operator. It allows you to provide a default value when a variable is either unset or empty.
+		   so here if variable is unset it provide default empty, and by -z it check value is empty
+
+Scope of variable:
+	Global variable:
+		- variable created outside of function() blocks
+		- variable create inside of function() block, without local keyboard
+
+	Local variable:
+		- variable created inside function() with local keyword
+
+	ex.
+		name="Mitesh"
+		show_name() {
+			local name="John"
+			echo "Inside function: $name"
+		}
+		show_name
+		echo "Outside function: $name"
+
+		o/p:
+			Inside function: John
+			Outside function: Mitesh
+
+	- Variable scope and visibility inside functions
+		- local variable accessible in called function also
+		- scope end when function '}' ends.
+
+		name="Global"
+		function_a() {
+			local name="Local"
+			echo "Function A: $name"
+			function_b
+		}
+		function_b() {
+			echo "Function B: $name"
+		}
+		function_a
+		echo "Outside: $name"
+
+		o/p:
+			Function A: Local
+			Function B: Local
+			Outside: Global
+
+Read-only variables
+	- The readonly command makes a variable immutable within the current shell.
+	APP_NAME="Threads"
+	readonly APP_NAME
+	readonly APP_PORT=8080
+
+Special variables in bash:
+
+	$0
+		Contains the name or path used to invoke the script.
+
+	$1, $2, $3, etc..
+		Positional parameter for script and function
+
+		script.sh:
+			#!/bin/bash
+			echo "First argument: $1"
+			echo "Second argument: $2"
+			echo "Third argument: $3"
+		
+		execute:
+			bash script.sh production nginx 8080
+
+	$#
+		- Number of positional parameter
+
+		script.sh	
+			#!/bin/bash
+			echo "Total arguments: $#"
+
+		execute:
+			bash script.sh production nginx 8080
+
+		o/p: Total arguments: 3
+
+	$@
+		- all positional parameter
+
+		script.sh	
+			#!/bin/bash
+			echo "$@"
+
+		execute:
+			bash deploy.sh production nginx 8080
+
+		o/p: production nginx 8080
+
+		use case: iterate over the argument
+			for arg in "$@"
+			do 	
+				echo "$arg"
+			done
+
+	$*
+		- also means all positional parameter
+		
+		Difference between "$@" and "$*":
+			$@ : 
+				- Expands each positional parameter as a separate quoted argument.
+				- Maintains the original argument boundaries.
+
+			$* :
+				- combine all parameter in one string
+
+		ex. echo "Using @"
+			for arg in "$@"
+			do
+				echo "Argument: $arg"
+			done
+			echo "Using *"
+			for arg in "$*"
+			do
+				echo "Argument: $arg"
+			done
+
+		o/p:
+			Using @
+			Argument: Hello World
+			Argument: Linux
+			Argument: Docker
+
+			Using *
+			Argument: Hello World Linux Docker
+
+	$$
+		- current shell PID
+		- echo "Current shell PID: $$"
+
+	$!
+		- Last background process id
+		
+		sleep 100 &
+		echo "Background process PID: $!"
+
+	$?
+		- Last command exit status
+		- Returns the exit status code of the most recently executed command.
+		ls
+		echo $?			# output: 0
+		
+		ls /abc			# if not found
+		echo $?			# output: 2

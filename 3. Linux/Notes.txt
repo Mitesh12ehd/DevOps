@@ -1,59 +1,9 @@
 TODOS:
-	- Command execution pass fail codes
 	- search for linux concept and command that is remaining
 	- Zombie and orphan process
-	- How to measure load of server?
+	- How to measure load of server?		
+	- Linux production broke fix?
+	- Production scenario and questions?
 	
-exit:
-
-    System level commands:
-
-    - who:
-        - shows user logged in and their activity 
-        - ex. when used logged in etc.
-        
-:
-	- null command, its exit status
-
-Input, Output and error:
-	- every commands three communication channels:
-		- standard input (stdin) 0 : recieve input
-		- standard oputput (stdout) 1 : display normal output
-		- standard error (stderr) 2 : display error message
-		
-	Standard input:
-		- By default, stdin is connected to your terminal (keyboard).
-		- read name:
-			- it wait for input 
-		- cat without argument read from stdin
-			- Whatever you type is displayed back because cat sends the received input to stdout.
-		- cat: taking input from file contect
-			cat < input.txt
-	
-	Standard output:
-		- Standard output is where a command sends its normal output.
-		- by default it is connected to terminal, it print on terminal
-		- You can redirect stdout to a file:
-			echo "Hello World" > output.txt
-			echo "Hello World" >> output.txt	# append
-		
-		- redirecting implicitly doing, here 1 is stdout code
-			echo "Hello World" 1> output.txt
-			echo "Hello World" 1>> output.txt	# append
-			
-	Standard error:
-		- Standard error is where a command sends error messages.
-		- By default, stderr is also connected to your terminal. it print error on terminal
-			
-		- redirect error:	
-			ls /abc123 2> error.txt
-			ls /abc123 2>> error.txt # append
-			
-	ping google.com > /dev/null 2>&1:
-		- redirects both standard output and standard error to /dev/null, so nothing is displayed in the terminal.
-		
-		2>&1
-			- redirect stderr(2) to wherever stdout(1) is currently pointing
-			- ping google.com > means ping google.com 1>
-			- so stdout is pointing to /dev/null, so error will also go there.
-			
+Commands:	
+	- bc: bash calc to perform floating point arithmetic
