@@ -1,0 +1,137 @@
+Reading input
+    echo "Enter your name: "
+    read name
+
+    - terminal wait for your input
+    - input will be stored in 'name' variable
+
+    - read multiple 
+        read first_name last_name
+
+    - prompt
+        - instead of writing separate echo for instruction
+        read -p "Enter your name: " name
+    
+    - silent input
+        - Sometimes you need to accept sensitive input, such as a password or token.
+        - You don't want the typed characters to appear on the terminal.
+
+        read -s -p "Enter password: " password
+        echo
+        echo "Password received successfully"
+
+        Note: when we use -s, it don't move cursor to next line after press enter,
+              so if any next command prints something it stays on same line 
+              to avoid this use echo.
+
+    - Read single character
+        - by default, read wait until user press enter 
+        - but if you want only single char as input 
+        
+        read -n 1 choice
+
+Printing using echo:
+
+    -n
+        - by default echo add new line after printing
+        - n option prevent new line 
+
+        echo -n "Hello"
+        echo "world"    
+
+        o/p: HelloWorld
+
+    escape characters:
+        - use option -e
+
+        echo -e "Hello\nWorld"
+
+        \n	Newline
+        \t	Horizontal tab
+        \\	Backslash
+        \"	Double quote
+        \b	Backspace
+        \r	Carriage return
+
+printf:
+    - useful command to display formatted output
+    - syntax: 
+        printf "format string" arguments
+
+    ex.
+        name="Mitesh"
+        age=25
+        printf "Name: %s\nAge: %d\n" "$name" "$age"
+
+    Format specifier:
+        %s	String
+        %d	Decimal integer
+        %i	Integer
+        %f	Floating-point number
+        %c	Single character
+        %%	Literal percentage sign
+            - if you want to print normal percentage then use this.
+
+    - string
+        name="Mitesh"
+        printf "Hello %s\n" "$name"
+
+    - integer formatting
+        age=25
+        printf "Age: %d\n" "$age"
+    
+    - float numbers
+        printf "Price: %.2f\n" 125.5678
+    
+    - display table
+        printf "%-15s %-10s\n"  "NAME" "STATUS"
+        printf "%-15s %-10s\n" "Web Server" "Running"
+        printf "%-15s %-10s\n" "Database" "Stopped"
+
+Here document:
+    - it allows you to multiline input
+    - variable expansion is also there inside here document
+
+    - syntax:
+        command <<EOF
+        Line1
+        Line2
+        Line3
+        EOF
+
+        - << is the here-document operator.
+        - EOF is delimiter, we can use any other delimiter of our choice, start and end should be match
+        - everything between delimiter becomes input to the command
+    
+    - using cat 
+        cat <<EOF
+        Hello Mitesh
+        Welcome to bash 
+        EOF
+
+    - creating configuration file
+        cat <<EOF > nginx.conf
+        server {
+            listen 80;
+            server_name example.com;
+
+            location / {
+                root /var/www/html;
+                index index.html;
+            }
+        }
+        EOF
+
+    - preventing variable expansion
+        APP_NAME="threads-app"
+        cat <<'EOF'
+        Application: $APP_NAME
+        EOF
+
+Here strings:
+    - it is similar to here document but it is for single line strings
+    - syntax:
+        command <<< "string"
+
+    - ex. 
+        cat <<< "Hello Mitesh"

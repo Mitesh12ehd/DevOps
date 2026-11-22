@@ -54,18 +54,14 @@ Bash syntax rules:
 	Case sensitive: 
 		- bash is case sensitive language
 	
-	Variable quating rules:
+	Variable quoting rules:
 		' ' : Literal string, no variable value replacement, value stored as it as
 		""  : allow variable value substitution
 		
-	Escape chracters:
-		- A backslash (\) is used to escape special characters or continue a command onto another line.
-		- echo "Hello \"Mitesh\""	# Hello "Mitesh"
-	
-		- Line continue
-			echo "This is very long \
-			command
-			"
-			
-			aws ec2 create-instance \
-				--type=t3.micro
+	Line continue:
+		echo "This is very long \
+		command
+		"
+		
+		aws ec2 create-instance \
+			--type=t3.micro

@@ -47,7 +47,7 @@ Exit status and exit codes:
 	
 	- Exit status:
 		0: command completed successfully
-		non-zero: command encountered error or reported unscuccessful result.
+		non-zero: command encountered error or reported unsuccessful result.
 		
 	- Check most recent commands execution status code
 		ls
@@ -91,13 +91,6 @@ exit:
 		    echo "Configuration file not found"
 		    exit 1
 		fi
-		
-Last background process ID:
-	echo $!
-	
-	ex.
-		ping google.com &
-		echo $!
 		
 wait:
 	- wait for background process

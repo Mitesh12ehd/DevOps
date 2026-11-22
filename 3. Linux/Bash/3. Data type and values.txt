@@ -1,0 +1,123 @@
+string:
+    - in bash variable, primarily treated as string
+    -   name="Mitesh"
+        age=25
+        salary=45000
+    
+    Defining string:
+
+        1. using double quotes:
+            - allow variable expansion
+
+            name="Mitesh"
+            echo "Hello $name"
+        
+        2. using single quotes:
+            - preserve same character provided, do not replace any value
+
+            - name="Mitesh"
+              echo 'Hello $name'
+
+Checking length of string:
+    name="Mitesh"
+    echo "${#name}"
+
+Boolean concept:
+    - bash no have any type boolean
+    - we can represent via 2 way
+
+    1. using string
+        is_running="true"
+        if [[ "$is_running" == "true ]]; then
+            echo "Application is running"
+        fi
+    
+    2. Command exit status 
+        true        # this command provide exit status 0
+        false       # this command provide exit status 1
+
+    - Using true and false in conditions:
+        if true; then
+            echo "blah blah..."
+        fi
+
+        if false; then
+            echo "Condition is true"
+        else
+            echo "Condition is false"
+        fi
+
+Indexed array:
+    - array are 0 indexed
+
+    # defining array
+    servers=("web1","web2","db1")
+
+    # accessing elements
+    echo "${servers[0]}"
+
+    # accessing all elements
+    echo "${servers[@]}"
+
+    # find length
+    echo "${#servers[@]}"
+
+    # adding elements
+    servers+=("monitoring")
+
+    # updating elements
+    servers[1]="app1"
+
+    # Removing element
+    unset 'servers[2]'
+    # it remove element at index 2, but it not automatically re-index remaining element
+
+    # iterating array
+    for server in "${servers[@]}"; do 
+        echo "$server"
+    done
+
+Associative array:
+    - it used names keys
+
+    declare -A server_info
+    server_info[web]="192.168.1.10"
+    server_info[db]="192.168.1.20"
+    server_info[monitoring]="192.168.1.30"
+
+    
+    echo "${server_info[web]}"  # accessing
+    echo "${!server_info[@]}"   # all keys, order may vary
+    echo "${server_info[@]}"    # all values, order may vary
+
+    # iterating
+    for key in "${!server_info[@]}"; do
+        echo "$key : ${server_info[$key]}"
+    done
+
+Integer attribute using declare -i:
+    declare -i result
+    age=10+20
+    echo $result
+
+declare and typeset
+    - both keyword do the same work
+    - note: it create local variable by default, so you use inside function also
+
+    declare name="Mitesh"
+    typeset city="Ahmedabad"
+
+    options:
+        -i	Integer attribute
+        -r	Read-only
+        -x	Export variable
+        -a	Indexed array
+        -A	Associative array
+        -p	Display variable attributes
+
+    ex.
+        declare -i count=50
+        declare -r APP="threads"
+        declare -x ENVIRONMENT="production"
+        declare -a servers=("web1" "web2")
+        declare -A ports=([http]=80 [https]=443)

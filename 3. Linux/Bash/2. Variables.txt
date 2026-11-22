@@ -72,8 +72,18 @@ Empty variable and unset variable
 		fi
 		echo "Application: $APP_NAME"
 
-		:- is a Bash parameter expansion operator. It allows you to provide a default value when a variable is either unset or empty.
-		   so here if variable is unset it provide default empty, and by -z it check value is empty
+		:- is a Bash parameter expansion operator. 
+		   It allows you to provide a default value when a variable is either unset or empty.
+		   so here if variable is unset it provide default empty, 
+		   and by -z it check value is empty
+
+		   - here we have provided anything so it takes empty as default value
+		   - we can provide like "${name:-Unknown}"
+
+			other ex.
+		   		read -p "Enter environment [dev]: " environment
+				environment=${environment:-dev}
+				# if environment not entered take as dev
 
 Scope of variable:
 	Global variable:
@@ -122,6 +132,7 @@ Read-only variables
 	APP_NAME="Threads"
 	readonly APP_NAME
 	readonly APP_PORT=8080
+	declare -r APP_DB="postgres"
 
 Special variables in bash:
 

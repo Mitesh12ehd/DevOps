@@ -1,4 +1,5 @@
 K8s:
+    - Helm, helmfile in detail
 
     Questions:
     - How we will prevent pod to communicate to each other in same cluster?
@@ -61,13 +62,18 @@ AWS:
     - What is difference between console access and programmatic access
 
 CI-CD:
+    - argo CD
+    - gitops
 
     Question:
     - have you used any security tools in your pipeline
 
 Other:
     - Blue green deployment
-    - Nginx
+    - Nginx, reverse proxy
+    - Rancher
+    - Artifactory
+    - Localstack
 
     Question:
     - What is the difference between encoding and hashing
