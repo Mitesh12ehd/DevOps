@@ -1,12 +1,27 @@
 #!/usr/bin/env bash
-cat <<EOF > nginx.conf
-server {
-    listen 80;
-    server_name example.com;
 
-    location / {
-        root /var/www/html;
-        index index.html;
-    }
-}
-EOF
+select environment in development staging production exit
+do
+    case "$environment" in
+        development)
+            echo "Selected development"
+            ;;
+
+        staging)
+            echo "Selected staging"
+            ;;
+
+        production)
+            echo "Selected production"
+            ;;
+
+        exit)
+            echo "Exiting..."
+            break
+            ;;
+
+        *)
+            echo "Invalid selection"
+            ;;
+    esac
+done

@@ -1,0 +1,160 @@
+How it evolute?
+    - if condition is true, it return exit status 0 (pass)
+      then it execute command inside then 
+    - otherwise it execute elif block, or else block
+
+if, elif, else: 
+    if condition1
+    then
+        commands
+    elif condition2
+    then
+        commands
+    elif condition3
+    then
+        commands
+    else
+        commands
+    fi
+
+Single line condition
+    if (( 10>5 )); then echo "greater"; fi
+    if (( 10 > 5 )); then echo "True"; else echo "False"; fi
+
+Empty and invalid condition
+
+    - invalid, so condition is there.
+        if 
+        then 
+            echo "Hello"
+        fi
+    
+    - empty, evaluate to false
+        if [[ ]]
+        then
+            echo "Hello"
+        fi
+
+Empty, non-empty string checks: 
+    if [ -z "$str" ]           # check if string is empty
+    if [ -n "$str" ]           # check string is not empty
+
+wildcard matching:
+    - string starting with prod
+        environment="production"
+        if [[ "$environment" == prod* ]]
+        then
+            echo "Production-related environment"
+        fi
+
+    - string ending with .sh
+        filename="deploy.sh"
+        if [[ "$filename" == *.sh ]]
+        then
+            echo "This is a shell script"
+        fi
+
+    - match one character 
+        application="app1"
+        if [[ "$application" == app? ]]
+        then
+            echo "Application pattern matched"
+        fi
+
+Regular expression matching
+    - to check string follows a particular pattern
+    - syntax
+        if [[ "$variable" =~ regex_pattern ]]
+
+    ex. 
+        check string contains only digits
+        number="12345"
+        if [[ "$number" =~ ^[0-9]+$ ]]
+
+Case statement: 
+    syntax:
+        case "$variable" in
+            pattern1)
+                commands
+                ;;
+            pattern2)
+                commands
+                ;;
+            pattern3)
+                commands
+                ;;
+            *)
+                default_commands
+                ;;
+        esac
+
+    ex. 
+        environment="production"
+        case "$environment" in
+            development)
+                echo "Deploying to development"
+                ;;
+            staging)
+                echo "Deploying to staging"
+                ;;
+            production)
+                echo "Deploying to production"
+                ;;
+            *)
+                echo "Invalid environment"
+                ;;
+        esac
+
+    - Multiple matching pattern 
+        - single case branch can match multiple block
+        - ex. 
+            dev|development)
+
+    - wildcard also works here 
+        *.yaml|*.yml)
+
+    - ;; and ;& and ;;&
+        ;; stop checking
+        ;& execute next block without checking its condition
+        ;;& continue next blocks by checking its pattern
+
+select: 
+    - select statement creates an interactive numbered menu.
+    - syntax:
+        select variable in option1 option2 option3
+        do
+            commands
+        done
+    - we can write any logic other than case block also 
+
+    ex. 
+        select environment in development staging production exit
+        do
+            case "$environment" in
+                development)
+                    echo "Selected development"
+                    ;;
+
+                staging)
+                    echo "Selected staging"
+                    ;;
+
+                production)
+                    echo "Selected production"
+                    ;;
+
+                exit)
+                    echo "Exiting..."
+                    break
+                    ;;
+
+                *)
+                    echo "Invalid selection"
+                    ;;
+            esac
+        done
+
+Conditional execution without if:
+    mkdir -p /tmp/devops-app && echo "Directory created successfully"
+    mkdir /root/test-directory || echo "Directory creation failed"
+    mkdir -p /tmp/myapp && echo "Success" || echo "Failure"

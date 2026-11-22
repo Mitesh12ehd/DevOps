@@ -1,0 +1,169 @@
+Arithmetic operators
+    a=10; b=3
+    echo $((a + b))
+    echo $((a - b))
+    echo $((a * b))
+    echo $((a / b))
+    echo $((a % b))
+    echo $((a ** b))    # Exponentiation
+
+    - it supports integer operation only
+
+    Increment and decrement:   
+        count=10
+        ((count++))
+        ((count--))
+        ((count += 1))
+        ((count -= 1))
+
+    Unary plus and minus:
+        number=10
+        echo $((+number))
+        echo $((-number))
+
+        + : preserve the sign
+        - : reverse the sign
+
+    Assignment operator:
+        count=10
+        (( count = 10 ))       # this is also valid way to to declare and initialize integer
+        echo "$count"
+
+        Compound assignment:
+            - works inside arithmetic block (())
+            += -= *= /= %=
+    
+Arithmetic evolution:
+    - there are 3 ways to perform arithmetic in bash
+        1. arithmetic expansion $(( ))
+        2. arithmetic command (( ))
+        3. let command
+
+    1. arithmetic expansion $(( ))
+        - it evolute expression and replace it with result 
+        - ex.
+            a=10
+            b=20
+            result=$((a + b))
+    
+    2. arithmetic command:
+        - evolute expression as command 
+        - ex.
+            count=10
+            ((count = count + 5))
+            echo "${count}"
+
+        - it return exit status 
+            expression evolute to zero: exit status 1 (fail)
+            expression evolute to nonzero: exit status 0 (pass)
+        - exit status is much important as we can use this expression on if condition
+            if ((count > 5))
+
+    - inside (()) or $ (())
+        we can use variable with or without $ sign
+
+    3. let
+        - another way to perform arithmetic operation
+        - ex.
+            a=10
+            b=20
+            let result=a+b
+            echo "$result"
+
+        - multiple operation
+            let a=10 b=20 result=a+b
+            echo "$result"
+
+        - increment decrement
+            let count++
+
+Integer operation:
+    - Bash arithmetic works primarily with integers.
+    - for advanced operation we have tool like bc
+    - bash supports negative integers
+
+Comparison operators:
+    - much used in writing condition, if while until
+    - comparison normally done in [] or [[]]
+
+    Numeric comparison:
+        -eq	Equal to
+        -ne	Not equal to
+        -gt	Greater than
+        -lt	Less than
+        -ge	Greater than or equal
+        -le	Less than or equal
+
+        ex. 
+            if [ "$a" -lt "$b" ]        # [[]] will also do same here
+            then
+                echo "blah blah.."
+            fi
+
+    String comparison:
+        ==	Strings are equal
+        !=	Strings are not equal
+        <	Lexicographically smaller
+        >	Lexicographically greater
+
+        ex. 
+            username="admin"
+            if [[ "$username" == "admin" ]]
+            then
+                echo "Welcome Admin"
+            fi
+    
+    Arithmetic comparison using (( )):
+        a=10
+        b=20
+        if ((a < b))
+        then
+            echo "a is smaller"
+        fi
+
+        - all other operator also works  
+            ((a == b))
+            ((a != b))
+            ((a > b))
+            ((a < b))
+            ((a >= b))
+            ((a <= b))
+
+    Conditional comparison using [[ ]]:
+        - it also supports
+            - pattern matching
+        - [[]] is preferred
+
+Logical operators:
+    AND (&&)
+    OR (||)
+    NOT (!)
+
+    ex. 
+        age=25
+        experience=2
+        if [[ "$age" -ge 18 && "$experience" -ge 2 ]]
+        then
+            echo "Eligible"
+        else
+            echo "Not eligible"
+        fi
+    
+    ex. 
+        service_status="stopped"
+        if [[ ! "$service_status" == "running" ]]
+        then
+            echo "Service is not running"
+        fi
+
+    ex. combine by brackets
+        environment="production"
+        disk_usage=90
+        memory_usage=70
+
+        if [[ "$environment" == "production" && ( "$disk_usage" -gt 80 || "$memory_usage" -gt 85 ) ]]
+        then
+            echo "Production resource warning"
+        else
+            echo "Resources are normal"
+        fi
