@@ -111,6 +111,13 @@ Associative array:
     echo "${!server_info[@]}"   # all keys, order may vary
     echo "${server_info[@]}"    # all values, order may vary
 
+    - direct way    
+        declare -A app_config=(
+            [name]="Threads"
+            [environment]="production"
+            [port]="3000"
+        )
+
     # iterating
     for key in "${!server_info[@]}"; do
         echo "$key : ${server_info[$key]}"

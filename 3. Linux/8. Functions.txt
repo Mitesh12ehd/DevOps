@@ -1,0 +1,228 @@
+Functions:
+    check_process_running() {
+        echo "Process is up and running"
+    }
+    check_process_running
+    check_process_running
+
+Function declaration
+    1. using parenthesis
+        check_process_running() {
+            echo "Process is up and running"
+        }
+    
+    2. using function keyword
+        function check_process_running {
+            echo "Process is up and running"
+        }
+
+Function calling:
+    function_name
+
+Function arguments:
+    - bash supports positional arguments
+        display_details() {
+            echo "Name: $1"
+            echo "Age: $2"
+            echo "City: $3"
+        }
+        display_details "Mitesh" 22 Amd
+
+    - for argument beyond 9, use curly braces
+        echo "${10}"
+
+    - script can also have positional arguments,
+      if we pass parameter to script, it not directly available to function 
+      we must pass to function, if we want to use it
+
+    - passing indexed array:
+        install_packages() {
+            local packages=("$@")
+
+            for package in "${packages[@]}"; do
+                echo "Installing $package"
+            done
+        }
+        my_packages=("git" "docker" "nginx" "kubectl")
+        install_packages "${my_packages[@]}"
+
+        - here we are expanding array into separate argument
+
+    - passing associative array:
+        - we can't pass whole array
+        - pass key and value separately
+
+Validating arguments:
+
+    example1: check parameter is missing
+    deploy_application() {
+        if [ "$#" -lt 1 ]; then
+            echo "Error: Application name is required"
+            return 1
+        fi
+
+        local app_name="$1"
+        echo "Deploying application: $app_name"
+        return 0
+    }
+
+    example2: check specific pattern
+    if ! [[ "$port" =~ ^[0-9]+$ ]]; then
+        echo "Error: Port must be numeric"
+        return 1
+    fi
+
+Pass by reference:
+    - normally bash passes variable as pass by value
+    - but there is one way to implement pass by reference similar concept.
+
+    Nameref variables using local -n:
+        - A nameref is a variable that refers to another variable by its name.
+        - syntax: local -n reference_name=variable_name
+
+    ex.
+        update_value() {
+            local -n ref_var=$1
+            ref_var="Updated"
+        }
+        APP_NAME="Threads"
+        update_value APP_NAME
+        echo "$APP_NAME"
+
+        o/p: Updated
+
+    Rule: 
+        - here we have passed APP_NAME without $
+        - as we have passed only variable name, not value
+
+    Passing indexed arrays by reference:
+        add_package() {
+            local -n packages=$1
+            packages+=("$2")
+        }
+        DOCKER_PACKAGES=("docker" "containerd")\
+        add_package DOCKER_PACKAGES "docker-compose"
+        echo "${DOCKER_PACKAGES[@]}"
+
+    Passing associative arrays by reference:
+        update_config() {
+            local -n config=$1
+            config[environment]="production"
+            config[port]="8080"
+        }
+        declare -A APP_CONFIG=(
+            [environment]="development"
+            [port]="3000"
+        )
+        update_config APP_CONFIG
+        echo "Environment: ${APP_CONFIG[environment]}"
+        echo "Port: ${APP_CONFIG[port]}"
+
+Function return values:
+
+    Returning status using 'return':
+        - Bash provides the return keyword to exit a function and set its exit status.
+        - syntax: return STATUS_CODE
+
+        ex. 
+        check_application() {
+            echo "Checking application..."
+            return 0
+        }
+        check_application
+
+        # return without status 
+        # it return exit status of last command executed
+        check_application() {
+            echo "Checking application..."
+            return
+        }
+
+    Capturing function status using $?
+        check_service() {
+            return 1
+        }
+        check_service
+        echo "Exit status: $?"
+
+    How to return values from function:
+        - by print statement like echo or printf
+        - using command substitution
+
+        - ex.
+        get_image_tag() {
+            echo "threads:v1.0.0"
+        }
+        IMAGE_TAG=$(get_image_tag)
+        echo "Docker image: $IMAGE_TAG"
+
+Recursion:
+    countdown() {
+        local number=$1
+        if (( number <=0 ))
+        then
+            echo "Done"
+            return 0
+        fi
+
+        echo "$number"
+        countdown "$((number-1))"
+    }
+
+    countdown 5
+
+Function libraries:
+    - A function library is a separate Bash file containing reusable functions that can be imported into other scripts.
+    
+    - assume below structure
+        devops-project/
+        │
+        ├── scripts/
+        │   ├── deploy.sh
+        │   ├── backup.sh
+        │   └── monitor.sh
+        │
+        └── libraries/
+            ├── logging.sh
+            ├── validation.sh
+            └── docker.sh
+    
+    logging.sh
+        #!/bin/bash
+        log_info() {
+            echo "[INFO] $*"
+        }
+
+        log_error() {
+            echo "[ERROR] $*" >&2
+        }
+
+        log_warning() {
+            echo "[WARNING] $*"
+        }
+    
+    validation.sh   
+        #!/bin/bash
+        check_command() {
+            local command_name="$1"
+            if command -v "$command_name" > /dev/null 2>&1; then
+                return 0
+            else
+                return 1
+            fi
+        }
+    
+    deployment.sh
+        source "../libraries/logging.sh"
+        source "../libraries/validation.sh"
+
+        log_info "Starting deployment"
+
+        if check_command docker; then
+            log_info "Docker is installed"
+        else
+            log_error "Docker is not installed"
+            exit 1
+        fi
+
+        log_info "Deployment preparation completed"
