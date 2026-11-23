@@ -77,6 +77,27 @@ Indexed array:
         echo "$server"
     done
 
+    # iterating using index
+        for index in "${!services[@]}"
+        do
+            echo "Index: $index"
+            echo "Service: ${services[$index]}"
+        done
+
+        for ((i=0; i<${#services[@]}; i++))
+        do
+            echo "${services[$i]}"
+        done
+
+    - Reading array elements from user input
+        echo "Enter service names:"
+        read -a services
+        echo "Services entered:"
+        for service in "${services[@]}"
+        do
+            echo "$service"
+        done
+
 Associative array:
     - it used names keys
 
@@ -94,6 +115,23 @@ Associative array:
     for key in "${!server_info[@]}"; do
         echo "$key : ${server_info[$key]}"
     done
+
+    # removing key value pair 
+    unset 'array_name[key]'
+
+    # checking weather key exists
+    declare -A server
+    server[name]="web-server"
+    server[port]="8080"
+    if [[ -v 'server[name]' ]]; then
+        echo "Name key exists"
+    else
+        echo "Name key does not exist"
+    fi
+
+Copying arrays:
+    original=("nginx" "docker" "jenkins")
+    copy=("${original[@]}")
 
 Integer attribute using declare -i:
     declare -i result
