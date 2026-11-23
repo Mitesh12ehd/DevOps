@@ -1,0 +1,181 @@
+For loop:
+    - ex.
+        for name in John Mike David
+        do
+            echo "Hello $name"
+        done
+    
+    - shorter syntax
+        for name in John Mike David; do
+            echo "Hello $name"
+        done
+
+    - c style syntax:
+        for (( i=1; i<=5; i++ ))
+        do
+            echo "$i"
+        done
+
+    - generating sequence
+        for i in {1..5}
+        do
+            echo "$i"
+        done
+
+        - specify increment
+            for i in {1..10..2}
+            do
+                echo "$i"
+            done
+
+        - descending sequence
+            for i in {5..1}
+            do
+                echo "$i"
+            done
+
+        - character sequence
+            for letter in {a..e}
+            do
+                echo "$letter"
+            done
+    
+    - iterating over the words in string    
+        SERVICES="nginx docker jenkins"
+        for service in $SERVICES
+        do
+            echo "$service"
+        done
+
+        note: When an unquoted variable is expanded, Bash performs word splitting and pathname expansion.
+              look $SERVICES, 
+              if we used "$SERVICES" it expands as single string
+
+    - iterating over positional parameter
+        for arg in "$@"
+        do
+            echo "Argument: $arg"
+        done
+
+    - iterating over indexed arrays
+        SERVICES=("nginx" "docker" "jenkins")
+        for service in "${SERVICES[@]}"
+        do
+            echo "$service"
+        done
+
+    - iterating via index
+        for index in "${!SERVICES[@]}"
+        do
+            echo "Index: $index, Value: ${SERVICES[$index]}"
+        done
+
+    - iterating over associative array
+        for key in "${!server_info[@]}"
+        do 
+            echo "Entry: ${key} ${server_info[$key]}"
+        done
+
+        - iterating over value is possible, without !
+    
+while loop:
+    - it execute logic till its condition return exit status 0 (pass)
+    - when condition become false, it exits.
+    - syntax:
+        while condition
+        do
+            commands
+        done
+    
+    - ex.
+        count=1
+        while [ "$count" -le 5 ]
+        do 
+            echo "Count: $count"
+            ((count++))
+        done
+
+until loop:
+    - it execute logic until the condition become successful exit status 0 (pass)
+    - when condition become true, it exits
+    - syntax:
+        until condition
+        do
+            commands
+        done
+    - ex. 
+        count=1
+        until [ "$count" -gt 5 ]
+        do
+            echo "Count: $count"
+            ((count++))
+        done
+
+infinite loops:
+    while true
+    do
+        echo "Running..."
+        sleep 2
+    done
+
+    until false
+    do
+        echo "Running..."
+        sleep 2
+    done
+
+    for (( ; ; ))
+    do
+        echo "Running..."
+        sleep 2
+    done
+
+while and until loops:
+    - condition can be a command also 
+        while systemctl is-active --quiet nginx
+        do
+            echo "Nginx is running"
+            sleep 5
+        done
+        echo "Nginx stopped"
+
+Loop controls:
+
+    break:
+        - to terminate the current loop
+        - ex.
+            for i in 1 2 3 4 5
+            do
+                if [ "$i" -eq 3 ]; then
+                    break
+                fi
+                echo "$i"
+            done
+
+    continue:
+        - it skip the rest logic for current condition, and move to next condition
+
+    break N:
+        - when we have written nested loops 
+        - we can terminate via single break by provide number of nested loops we want to break
+        - ex.
+            break 2
+
+    continue N:
+        - continue N skips to the next iteration of the Nth enclosing loop.
+        - ex. 
+            for i in 1 2 3
+            do
+                for j in A B C
+                do
+                    if [ "$j" = "B" ]; then
+                        continue 2
+                    fi
+
+                    echo "$i - $j"
+                done
+            done
+
+            o/p: 1 - A
+                 2 - A
+                 3 - A
