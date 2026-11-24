@@ -1,0 +1,232 @@
+Named arguments:
+    - what if we want to take parameter like below
+        ./deploy.sh --app thread --environment production
+
+    - Unlike positional arguments, their order does not need to be fixed if your parser supports different orders.
+    - Bash does not automatically interpret arbitrary long options. We need to implement the parsing logic ourselves.
+
+Manual argument parsing:
+    #!/bin/bash
+    while [ "$#" -gt 0 ]; do
+        case "$1" in
+            --app)
+                APP_NAME=$2
+                shift 2
+                ;;
+            --environment)
+                ENVIRONMENT=$2
+                shift 2
+                ;;
+            --version)
+                VERSION=$2
+                shift 2
+                ;;
+            *)
+                echo "Unknown option: $1"
+                exit 1
+                ;;
+        esac
+    done
+    echo "Application: $APP_NAME"
+    echo "Environment: $ENVIRONMENT"
+    echo "Version: $VERSION"
+
+Handling options with values
+    - what if someone provide 
+        ./deploy.sh --app
+    - Improved implementation below
+
+    #!/usr/bin/env bash
+    while [ "$#" -gt 0 ]; do
+        case "$1" in
+            --app)
+                if [[ -z "${2:-}" ]]; then 
+                    echo "ERROR: --app requires a value"
+                    exit 1
+                fi
+                APP_NAME=$2
+                shift 2
+                ;;
+            --environment)
+                if [[ -z "${2:-}" ]]; then 
+                    echo "ERROR: --environment requires a value"
+                    exit 1
+                fi
+                ENVIRONMENT=$2
+                shift 2
+                ;;
+            --version)
+                if [[ -z "${2:-}" ]]; then 
+                    echo "ERROR: --version requires a value"
+                    exit 1
+                fi
+                VERSION=$2
+                shift 2
+                ;;
+            *)
+                echo "Unknown option: $1"
+                exit 1
+                ;;
+        esac
+    done
+    echo "Application: $APP_NAME"
+    echo "Environment: $ENVIRONMENT"
+    echo "Version: $VERSION"
+
+Short options:
+    ./deploy.sh -a threads -e production -v v1.2.0
+
+    while [ "$#" -gt 0 ]; do
+        case "$1" in
+            --app|-a)
+                APP_NAME=$2
+                shift 2
+                ;;
+            --environment|-e)
+                ENVIRONMENT=$2
+                shift 2
+                ;;
+            --version|-v)
+                VERSION=$2
+                shift 2
+                ;;
+            *)
+                echo "Unknown option: $1"
+                exit 1
+                ;;
+        esac
+    done
+    echo "Application: $APP_NAME"
+    echo "Environment: $ENVIRONMENT"
+    echo "Version: $VERSION"
+
+Option value using =
+    - some CLI also support
+        ./deploy.sh --app=threads --environment=production
+
+    parser:
+        --app=*)
+            APP_NAME=${1#*=}
+            shift
+            ;;
+        
+        #*=
+            - # remove the prefix 
+            - *= match everything after =
+
+Parsing using getopts:
+    - bash provide built in utility called getopts for parsing short options
+
+    while getopts ":a:e:v:h" opt; do
+        case "$opt" in
+            a)
+                APP_NAME=$OPTARG
+                ;;
+            e)
+                ENVIRONMENT=$OPTARG
+                ;;
+            v)
+                VERSION=$OPTARG
+                ;;
+            h)
+                echo "Usage: $0 -a APP -e ENVIRONMENT [-v VERSION]"
+                exit 0
+                ;;
+            :)
+                echo "Option -$OPTARG requires a value"
+                exit 1
+                ;;
+            \?)
+                echo "Invalid option: -$OPTARG"
+                exit 1
+                ;;
+        esac
+    done
+    echo "Application: $APP_NAME"
+    echo "Environment: $ENVIRONMENT"
+    echo "Version: ${VERSION:-latest}"
+
+    Explanation:
+        a:	Option -a requires a value
+        e:	Option -e requires a value
+        v:	Option -v requires a value
+        h	Option -h does not require a value
+        Leading :	Enables silent error handling
+
+Task:
+    Requirements:
+        - -a or --app: mandatory application name.
+        - -e or --environment: mandatory environment.
+        - -v or --version: optional version.
+        - -h or --help: display usage.
+        - Support both --option value and --option=value.
+        - Reject invalid options.
+        - Reject missing values.
+        - Validate mandatory parameters.
+
+Solution:
+
+#!/usr/bin/env bash
+
+APP_NAME=""
+ENVIRONMENT=""
+VERSION="latest"
+
+while [[ "$#" -gt 0 ]]; do
+    case "$1" in
+        --app|-a)
+            if [[ "$#" -lt 2 ]] || [[ -z "$2" ]] || [[ "$2" == -* ]]; then 
+                echo "ERROR --app requires a value"
+                exit 1
+            fi
+            APP_NAME=$2
+            shift 2
+            ;;
+        --app=*)
+            APP_NAME=${1#*=}
+            shift 1
+            ;;
+        --environment|-e)
+            if [[ "$#" -lt 2 ]] || [[ -z "$2" ]] || [[ "$2" == -* ]]; then 
+                echo "ERROR --environment requires a value"
+                exit 1
+            fi
+            ENVIRONMENT=$2
+            shift 2
+            ;;
+        --environment=*)
+            ENVIRONMENT=${1#*=}
+            shift
+            ;;
+        --version|-v)
+            if [[ "$#" -lt 2 ]] || [[ -z "$2" ]] || [[ "$2" == -* ]]; then 
+                echo "ERROR --version requires a value"
+                exit 1
+            fi
+            VERSION=$2
+            shift 2
+            ;;
+        --version=*)
+            VERSION=${1#*=}
+            shift
+            ;;
+        --help|-h)
+            echo "Usage: $0 -a APP -e ENVIRONMENT [-v VERSION]"
+            exit 0
+            ;;
+        *)
+            echo "Invalid options: $1"
+            exit 1
+            ;;    
+    esac
+done
+
+if [ -z "$APP_NAME" ] || [ -z "$ENVIRONMENT" ]; then
+    echo "ERROR: Application and environment are mandatory"
+    exit 1
+fi
+
+echo "Starting deployment..."
+echo "Application: $APP_NAME"
+echo "Environment: $ENVIRONMENT"
+echo "Version: ${VERSION}"

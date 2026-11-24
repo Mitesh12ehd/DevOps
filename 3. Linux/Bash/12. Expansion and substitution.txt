@@ -1,0 +1,167 @@
+Variable expansion:
+    echo $APP_NAME
+    echo ${APP_NAME}
+    echo "$APP_NAME"
+    echo "${APP_NAME}"
+
+    - bracket are important when it is followed by other character 
+        ex. 
+            "${APP_NAME}_app"
+
+    ${variable:-default}:
+        - Default value
+        - to use default value when variable is unset or empty
+
+        ex. 
+            ENVIRONMENT=""
+            echo "${ENVIRONMENT:-development}"
+
+    ${variable-default}
+        - Default only when unset
+        - to use default value only when variable is unset 
+
+    ${variable:=default}
+        - to use default value and also assign that value to variable when unset or empty
+        - ex.
+            ENVIRONMENT=""
+            echo "${ENVIRONMENT:=development}"
+            echo "$ENVIRONMENT"
+        - o/p:
+            development 
+            development
+
+    ${variable=default}
+        - to use and assign default value only when unset
+        - ex.
+            ENVIRONMENT=""
+            echo "${ENVIRONMENT=development}"
+            echo "$ENVIRONMENT"
+        - o/p:
+            empty
+
+    ${variable:?error_message}
+        - to ensure variable is set and non-empty
+        - if it is unset or empty, bash prints error and terminate
+
+        ex. 
+            : "${APP_NAME:?APP_NAME is required}"
+            echo "Application: $APP_NAME"
+
+    ${variable:+value}
+        - This returns the specified value if the variable is set AND non-empty.
+        - otherwise it return empty string 
+
+        ex. 
+            ENVIRONMENT="production"
+            echo "${ENVIRONMENT:+Environment is configured}"
+
+        o/p: Environment is configured
+
+    ${#variable}
+        - String length
+
+    ${variable:offset}
+        - extract substring from specified offset
+        - ex. 
+            TEXT="DevOpsEngineer"
+            echo "${TEXT:0}"
+            echo "${TEXT:3}"
+            echo "${TEXT:6}"
+        - o/p:
+            DevOpsEngineer
+            OpsEngineer
+            Engineer
+
+    ${variable:offset:length}
+        - extract specific number of character starting from an offset
+        - ex. 
+            echo "${TEXT:0:6}"
+            echo "${TEXT:6:8}"
+            echo "${TEXT:3:4}"
+        - o/p:
+            DevOps
+            Engineer
+            OpsE
+
+String manipulation:
+
+    Removing shorted matching prefix: ${VAR#pattern}
+        - # operator removes the shortest matching pattern from the beginning of the string.
+        - ex. 
+            FILE_PATH="/home/mitesh/scripts/deploy.sh"
+            echo "${FILE_PATH#*/}"
+        o/p:
+            home/mitesh/scripts/deploy.sh
+            # */ matches character from beginning through the first /
+
+    Removing the longest matching prefix: ${VAR##pattern}
+        - ## operator removes the longest matching prefix.
+        - ex. 
+            FILE_PATH="/home/mitesh/scripts/deploy.sh"
+            echo "${FILE_PATH##*/}"
+        - o/p:
+            deploy.sh
+
+    Removing the shortest matching suffix: ${VAR%pattern}
+        - % operator removes the shortest matching pattern from the end.
+        - ex. 
+            FILE="deploy.backup.tar.gz"
+            echo "${FILE%.*}"
+        - o/p:
+            deploy.backup.tar
+
+    Removing the longest matching suffix
+        - %% operator removes the longest matching suffix.
+        - ex. 
+            FILE="deploy.backup.tar.gz"
+            echo "${FILE%%.*}"
+        - op:
+            deploy
+
+    Replacing substring first occurrence:
+        - syntax:
+            ${variable/pattern/replacement}
+        - ex:
+            TEXT="I use Docker for deployment"
+            echo "${TEXT/Docker/Kubernetes}"
+        - o/p:
+            I use Kubernetes for deployment
+
+    Replacing all occurrences:
+        - syntax:
+            ${VARIABLE//pattern/replacement}
+        - ex:
+            TEXT="Docker Docker Docker"
+            echo "${TEXT//Docker/Podman}"
+        - o/p:
+            Podman Podman Podman
+
+        - empty replacement
+            TEXT="app-v1.2.0"
+            echo "${TEXT//-/}"
+    
+    Changing case:
+        # uppercase
+        APP_NAME="threads"
+        echo "${APP_NAME^^}"
+
+        # lowercase
+        ENVIRONMENT="PRODUCTION"
+        echo "${ENVIRONMENT,,}"
+
+        # covert first character to upper case and lower case
+        echo "${TEXT^}"
+        echo "${TEXT,}"
+
+Indirect variable expansion:
+    # normal
+    APP_NAME="threads"
+    echo "$APP_NAME"
+
+    # Indirect
+    # variable containing name of another variable 
+    APP_NAME="threads"
+    VARIABLE_NAME="APP_NAME"
+    echo "${!VARIABLE_NAME}"
+
+    # o/p: threads

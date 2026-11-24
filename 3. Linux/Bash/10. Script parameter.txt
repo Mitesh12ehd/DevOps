@@ -1,0 +1,93 @@
+Positional arguments to script:
+    - positional parameter can be passed to script or functions.
+    ex. 
+        #!/bin/bash
+        echo "First argument: $1"
+        echo "Second argument: $2"
+        echo "Third argument: $3"
+    - execute:
+        bash script.sh Docker Jenkins AWS
+
+Argument manipulation:
+
+    shift:
+        - remove first argument
+        - shift the remaining argument to one position left
+
+    shift N:
+        - remove multiple argument at once
+        - ex. 
+            echo "Before shift: $# arguments"
+            shift 2
+            echo "After shift: $# arguments"
+            echo "Remaining arguments: $@"
+
+Iterating:
+    - using for loop    
+        for arg in "$@"; do
+            echo "Argument: $arg"
+        done
+
+    - using while loop and shift
+        while [ "$#" -gt 0 ]; do
+            echo "Current argument: $1"
+            shift
+        done
+
+Optional arguments:
+    ex. 
+        #!/bin/bash
+
+        APP_NAME=$1
+        ENVIRONMENT=$2
+        VERSION=${3:-latest}
+
+        echo "Application: $APP_NAME"
+        echo "Environment: $ENVIRONMENT"
+        echo "Version: $VERSION"
+
+    - execute:
+        ./deploy.sh threads production
+        ./deploy.sh threads production v2.0     #o/p wil contains v2.0 instead of latest
+
+    - Output:
+        Application: threads
+        Environment: production
+        Version: latest
+
+Handling missing and extra argument:
+    requirement:
+        Application name: mandatory.
+        Environment: mandatory.
+        Version: optional.
+        More than three arguments: not allowed.
+        Application name and environment cannot be empty.
+
+    code:
+    #!/usr/bin/env bash
+
+    if [[ "$#" -lt 2 ]]; then
+        echo "Error: Missing mandatory arguments"
+        echo "Usage" $0 <app name> <environment> [version]"
+        exit 1
+    fi
+
+    if [[ "$#" -gt 3 ]]; then
+        echo "Error: Too many arguments"
+        echo "Usage" $0 <app name> <environment> [version]"
+        exit 1
+    fi
+
+    if [[ -z "$1" || -z "$2" ]]; then
+        echo "ERROR: Application and environment cannot be empty"
+        exit 1
+    fi
+
+    APP_NAME=$1
+    ENVIRONMENT=$2
+    VERSION=${3:-latest}
+
+    echo "Starting deployment..."
+    echo "Application: $APP_NAME"
+    echo "Environment: $ENVIRONMENT"
+    echo "Version: $VERSION"
