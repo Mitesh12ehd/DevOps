@@ -1,0 +1,36 @@
+Debug bash script:
+    - using -x
+    - execute script with -x option
+    - it shows all the command that is running
+        + greet Mitesh
+        + local name=Mitesh
+        + echo 'Hello Mitesh'
+        Hello Mitesh
+
+Enable debugging inside script:
+    - enable using set -x 
+    - disable using set +x
+
+    ex. 
+        echo "Starting script"
+        set -x
+        name="Mitesh"
+        age=25
+        echo "Name: $name"
+        echo "Age: $age"
+        set +x
+        echo "Script completed"
+
+Inspect existing function:
+    
+    # display function definition
+    declare -f greet
+
+    # check what name resolve to
+    type greet 
+
+    # find all matching definition or command location 
+    type -a ls
+
+    # List all currently defined Functions
+    declare -F

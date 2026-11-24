@@ -226,3 +226,70 @@ Function libraries:
         fi
 
         log_info "Deployment preparation completed"
+
+Sourcing files:
+    - executing other file in current shell environment, rather than creating separate process
+    - way to source file 
+        source filename
+        . filename
+
+    - ex.
+        project:
+            - main.sh
+            lib:
+                - function.sh
+
+        main.sh
+            source ./lib/functions.sh
+            greet
+            result=$(calculate 10 20)
+            echo "Result: $result"
+
+    path:
+        - when we give relative path it works from that directory only.
+        - either we can provide absolute path 
+        
+        reliable approach:
+            SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+            source "$SCRIPT_DIR/lib/functions.sh"
+
+            - ${BASH_SOURCE[0]} identifies the current script filepath.
+            - dirname extracts it directory
+            - cd and pwd finds absolute path 
+            - library sourced using absolute path
+
+Function overriding:
+
+    - ex. 
+        greet() {
+            echo "Hello"
+        }
+        greet
+        greet() {
+            echo "Hello Mitesh"
+        }
+        greets
+
+        o/p: Hello
+             Hello Mitesh
+        
+    - Function overriding through libraries:
+        - it is much important while sourcing the file
+        - order of source matters
+        - recently source code get priority
+    
+    - Function override linux command:
+        - bash function takes priority over linux command
+        - ls() {
+                echo "My custom ls function"
+            }
+            ls
+        - o/p: My custom ls function
+
+How to execute linux command over the function?
+    - using command 
+        command ls
+    - it bypass all function definition
+
+    - Remove the function:
+        unset -f ls
