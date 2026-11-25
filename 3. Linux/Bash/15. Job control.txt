@@ -1,0 +1,89 @@
+Job control:
+    - to manage multiple jobs from single terminal
+    - we can 
+        - start command in background
+        - suspend running foreground process 
+        - Resume suspended commands in the foreground.
+        - Resume suspended commands in the background.
+        - List active and stopped jobs 
+        - terminate jobs
+    - it manage job associated with current shell.  
+
+    - check job control is enabled or not
+        set -o | grep monitor
+    - enable
+        set -m
+    - disable
+        set +m
+
+Job vs process:
+    - process is individual program running 
+    - A job is a command or pipeline managed by the shell.
+
+    ex. 
+        sleep 100 | cat &
+        [1] 2456
+
+        - this is one background job, it can involve multiple processes.
+        - 1: Job Id
+        - 2456: Process id
+
+Listing jobs
+    - jobs
+
+    ex. 
+        sleep 100 &
+        sleep 200 &
+        sleep 300 &
+        jobs
+
+    o/p:
+        [1]   Running    sleep 100 &
+        [2]-  Running    sleep 200 &
+        [3]+  Running    sleep 300 &
+
+    + current job
+    - previous job
+    no symbol: other job
+
+Reference jobs:
+    %1	Job number 1
+    %2	Job number 2
+    %+	Current job
+    %%	Current job
+    %-	Previous job
+    %string	    Job whose command begins with string
+    %?string	Job whose command contains string
+
+    ex. 
+        sleep 100 &
+        sleep 200 &
+
+        # refer first job 
+        jobs %1
+        jobs %+
+
+Moving a Foreground Process to the Background:
+    - if we have write 
+        sleep 100
+    - we want to move to background 
+        1. ctrl + z : suspend the foreground job
+        2. verify, job
+            [1]+  Stopped    sleep 100
+        2. Resuming suspended job in background
+            bg
+            # o/p: [1]+ sleep 100 &
+
+    - specify job 
+        bg %1
+
+Bringing a Background Job to the Foreground – fg
+    - sleep 100 &
+    - fg
+
+    - specify process 
+        fg %1
+
+disown – Removing a Job from Shell Management
+    sleep 300 &
+    disown %1

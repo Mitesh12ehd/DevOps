@@ -1,0 +1,86 @@
+kill:
+    - kill command is used to send signals to processes.
+    - mostly it is used to terminate a running process, but it can also pause, resume, or notify a process.
+
+    syntax:
+        kill [signal] [pid]
+
+    example:
+
+    # SIGTERM: signal 15 
+    # signal to terminate process gracefully
+    # Save data.
+    # Close open files.
+    # Release resources.
+    # Perform cleanup operations.
+    kill 1234
+
+    # 0 : To check process exists and current user has permission to send signal to it.
+    #     it it return 0 process exists and access is there. otherwise it return non-zero
+    # SIGHUP: 1, hangup
+    # SIGINT: 2, Interrupt
+    # SIGQUIT: 3, quit
+    # SIGKILL: 9, forcefully terminate
+    # SIGTERM: 15, gracefully terminate
+    # SIGCONT: 18*, continue stopped process
+    # SIGSTOP: 19*, Stop process
+    # SIGTSTP: 20*, Terminal stop (Ctrl+Z)
+    kill -9 1234
+
+    ctrl + c:
+        - it produce SIGINT 2 signal
+
+    # send signal using Keyword
+    kill -TERM "$PID"
+    kill -KILL "$PID"
+    kill -INT 2456
+
+Process termination:
+    - if it normally terminate without any issue, it has exit status 0.
+
+    - abnormal process termination
+        Receiving an unhandled termination signal.
+        Accessing invalid memory.
+        Encountering a fatal runtime error.
+        Being killed by the operating system.
+        Experiencing an unrecoverable application error.
+
+        - it will not have exit status 0.
+        - it has specific error status based on the error
+
+Zombie processes:
+    - it is a process that has finished execution, but its parent has not yet collected its termination status.
+    - when process exits, kernel have information including:
+        - PID
+        - Termination status
+        - Resource usage information
+    
+    - parent process can collect child process status using 'wait' command or any related system call
+    - Until that happens, the child remains in the process table as a zombie.
+
+    ex. 
+        #!/bin/bash
+        (
+            exit 0
+        ) &
+        PID=$!
+        sleep 60
+        ps -o pid,ppid,stat,cmd -p "$PID"
+
+    - here PID is collected before terminating subshell process.
+    - so we haven't collect info of that 
+    - o/p:
+            PID    PPID STAT CMD
+            2500    2400 Z    [bash] <defunct>
+    - Z indicate zombie process
+
+Orphan processes:
+    - it is a process whose parent terminates while the child is still running.
+    - ex. 
+        #!/bin/bash
+        sleep 1000 &
+        echo "Child PID: $!"
+        exit 0
+
+    - inspect new parent of orphan process
+        ps -o pid,ppid,stat,cmd -p [CHILD_PID]

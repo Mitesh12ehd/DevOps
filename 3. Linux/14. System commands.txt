@@ -77,41 +77,6 @@ shutdown, reboot:
     - to perform its tasks
     - we can also schedule by giving time parameter
 
-jobs:
-    - used to display jobs (processes) running or stopped in the background of your current 
-      shell session.
-    - if we run any command in background using & operator, we can see them in jobs
-
-kill:
-    - kill command is used to send signals to processes.
-    - mostly it is used to terminate a running process, but it can also pause, resume, or notify a process.
-
-    syntax:
-        kill [signal] [pid]
-
-    example:
-
-    # SIGTERM: signal 15 
-    # signal to terminate process gracefully
-    # Save data.
-    # Close open files.
-    # Release resources.
-    # Perform cleanup operations.
-    kill 1234
-
-    # SIGHUP: 1, hangup
-    # SIGINT: 2, Interrupt
-    # SIGQUIT: 3, quit
-    # SIGKILL: 9, forcefully terminate
-    # SIGTERM: 15, gracefully terminate
-    # SIGCONT: 18*, continue stopped process
-    # SIGSTOP: 19*, Stop process
-    # SIGTSTP: 20*, Terminal stop (Ctrl+Z)
-    kill -9 1234
-
-    ctrl + c:
-        - it produce SIGINT 2 signal
-
 id : displays user and group identification information for the current user or a 
      specified user.
 
