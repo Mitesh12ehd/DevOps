@@ -31,10 +31,10 @@
 
 groups command:
     - command runs sequentially
+    - last command will return exit status.
 
     1. Using { }:
         - execute command in current shell
-
 
         syntax: 
             {
@@ -49,6 +49,14 @@ groups command:
             }
 
             echo "hello" && { echo "hello"; echo "hello"; }
+
+        Redirect output of entire group:
+            {
+                echo "Deployment started"
+                date
+                hostname
+                echo "Deployment completed"
+            } > deployment.log
 
     2. Using ( ):
         - execute command in different shell environment

@@ -256,3 +256,26 @@ Pathname Expansion:
         - negation
             ls app[!0-9].log
             # doesn't match the app having digit after app
+
+Process substitution
+    - useful when command expected file as argument, but we want to provide generated data by another command 
+      without creating file 
+    - two syntax: 
+        <(command) – Process substitution for input.
+        >(command) – Process substitution for output.
+    
+    - For input:
+        ex. 
+            cat <(echo "Hello World")
+
+    - For output:   
+        ex. 
+            echo "Hello World" > >(tr '[:lower:]' '[:upper:]')
+
+    ex. 
+        - sending output to two destination
+        tee >(wc -l) >(grep "ERROR") < application.log
+
+        - tee reads application.log
+        - it send the content to wc -l
+        - and grep receive tee output to count Error

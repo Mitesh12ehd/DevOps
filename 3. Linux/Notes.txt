@@ -7,3 +7,9 @@ TODOS:
 	
 Commands:	
 	- bc: bash calc to perform floating point arithmetic
+
+Bash:
+	- process substitution
+	- echo "20" | read count, what are all the way where read receive output from somewhere else, instead of user
+	  use case: iterating over each line of file 
+	            providing input to while loop

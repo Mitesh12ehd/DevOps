@@ -1,0 +1,122 @@
+Subshell:
+    - subshell is a separate shell execution environment created by Bash to execute commands independently of the current 
+      shell environment.
+    - changes made inside subshell do not affect parent shell
+
+    - Places where subshell is created:
+    1. using () grouping:
+        name="Parent"
+        (
+            name="Child"
+            echo "$name"
+        )  
+
+        o/p:
+            Child
+            Parent
+
+        - exit status:
+            - by default it will be exit status of last command 
+            - we can provide custom exit status by exit command
+
+    2. Pipeline:
+        echo "hello" | read VALUE
+        echo "VALUE: $VALUE"
+
+        o/p:
+            VALUE:          # because VALUE is there in subshell
+    
+        Issue:
+            - if you want to iterate over the each line of file?
+                COUNT=0
+                cat names.txt | while read -r LINE; do
+                    COUNT=$((COUNT + 1))
+                done
+                echo "Total lines: $COUNT"
+
+                o/p: 
+                    Total lines: 0
+
+        - Resolve
+            while read -r LINE; do
+                COUNT=$((COUNT + 1))
+            done < names.txt
+
+    3. Command substitution:
+        name="Parent"
+        result=$(name="Child"; echo "$name")
+        echo "$result"
+        echo "$name"
+
+        o/p: 
+            Child
+            Parent
+
+    4. Process substitution 
+        - <( ) and >( ) also use separate process
+        - cat <(echo "Hello from process substitution")
+        - here bash execute command inside bracket in separate shell 
+          and provide file reference to its output
+
+    5. Background execution:
+        - command executed using & use separate process and it also run parallels in background.
+
+Childshell:
+    - A child shell is a new shell process started by parent shell process.
+
+    - Places where childshell is created:
+    1. using bash :
+        echo "Parent PID: $BASHPID"
+        bash
+        echo "Child PID: $BASHPID"
+
+        o/p:
+            Parent PID: 2450
+            Child PID: 2510
+
+        - bash started second process
+        - to terminate do exit, it returns to parent process
+
+    2. Using bash -c
+        - it execute command in child shell 
+        - bash -c 'echo "Hello from child Bash"'
+
+Common points between both:
+    1. Both execute independently of the parent shell
+
+    2. variable inheritance:
+        - child process can access exported variables from its parent
+        - variable changes inside child shell do not affect parent
+
+    3. directory inheritance:
+            - child shell inherits parent directory
+            - changing directory in child doesn't affect parent directory
+
+Difference:
+
+    1. Non-exported variable access:
+        subshell: can access non-exported variable also
+
+        childshell: can't access non-exported variable
+
+lastpipe for pipeline:
+    - by default bash executes each command in a pipeline in a subshell environment. This includes the last command.
+    - lastpipe shell option changes this behavior
+    - it allows the last command in a pipeline to execute in the current shell instead of a subshell.
+
+    - ex. 
+        shopt -s lastpipe
+        set +m
+        count=10
+        echo "20" | read count
+        echo "Count: $count"
+
+    - o/p:
+        20
+
+    - check lastpipe is enabled or disabled
+        shopt lastpipe
+    - enable 
+        shopt -s lastpipe
+    - disable
+        shopt -u lastpipe

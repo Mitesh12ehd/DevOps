@@ -1,0 +1,161 @@
+Command execution:
+
+    Execution external command 
+        - external command is a program that exists separately from the Bash shell
+        - When you execute it, Bash locates the executable and starts a separate process to run it.
+        - ex. 
+            ls
+            grep
+            docker
+            kubectl
+            systemctl
+        - These commands are generally executable files installed on your Linux system.
+
+    Finding external command:
+        - use 'type' and 'command -v' to identify commands.
+        - type ls
+        - command -v docker
+
+        Location executable file:
+            which ls
+
+    Bash built in command:
+        - Bash built-in is a command that is implemented directly inside the Bash shell rather than being executed as a separate 
+          external executable.
+        - ex.
+            cd 
+            echo
+            read
+            export
+            unset
+            pwd 
+            type
+        
+        identify built in command:
+            type cd
+
+Command lookup order:
+    - when we execute command, bash determines which command to run
+    - precedence:
+        - alias 
+        - shell keyword
+        - shell functions 
+        - bash built-in
+        - external executable through $PATH
+
+        Note: If executable is at two difference place with same name 
+              both path is in $PATH 
+              then whichever found first in $PATH, gets precedence
+
+wait:
+    - wait for background jobs 
+        sleep 5 &
+        echo "Background process started"
+        wait
+        echo "Background process completed"
+
+	- wait for specific process
+		sleep 5 &
+		PID=$!
+		wait "$PID"
+
+    - Capturing the exit status using wait
+        - wait also return exit status of background process
+        - ex. 
+            true &
+            PID=$!
+            wait "$PID"
+            STATUS=$?
+            echo "Exit status: $STATUS"
+
+Exit status and exit codes:
+	- every command that finishes returns integer called exit status
+	- status indicates whether the command execution succeeded or failed.
+	- Exit statuses range from 0 to 255.
+	
+	- Exit status:
+		0: command completed successfully
+		non-zero: command encountered error or reported unsuccessful result.
+		
+	- Check most recent commands execution status code
+		ls
+		echo $?			# output: 0
+		
+		ls /abc
+		echo $?			# output: 2
+		
+	- Exit code are interpreted by command implementation, we can also use any exit code in our bash script
+	- commonly encountered exit codes:
+		0	Success
+		1	General error
+		2	Misuse of shell command / some command-specific errors
+		126	Command found but cannot be executed
+		127	Command not found
+		128	Invalid exit argument
+		130	Process terminated by Ctrl+C (SIGINT)
+		137	Process killed using SIGKILL (commonly)
+		143	Process terminated by SIGTERM (commonly)
+		
+	- Negation:
+		! ls /abc123
+		- if abc123 not found, it result to exit status 0
+
+        - using ! with condition
+            if ! [[ -f "/tmp/config.txt" ]]; then
+                echo "Configuration file does not exist"
+            fi
+		
+	- true and false command
+		true
+		echo $?  		# output:0
+		
+		false
+		echo $?			# output:1
+
+    - Exit status in pipeline        
+        - by default recent execution status is for last command
+            true | false
+            echo $?
+
+            o/p: 1
+
+        - PIPESTATUS
+            - it stores execution status of most recent pipeline
+            - inspect each individual status
+                false | true | false
+                echo "${PIPESTATUS[@]}"
+                
+                o/p: 1 0 1
+
+            - inspect each 
+                echo "First command: ${PIPESTATUS[0]}"
+                echo "Second command: ${PIPESTATUS[1]}"
+
+Variables related to shell process:
+    $$ : 
+        - process ID of the shell that started the current Bash execution environment.
+        - ex. 
+            echo "Current shell PID: $$"
+            bash -c 'echo "Child Bash PID: $$"'
+        - o/p"
+            Current shell PID: 2450
+            Child Bash PID: 2510
+
+    $BASHPID:
+        - PID of the Bash process currently executing
+
+    Difference between $$ and $BASHPID:
+        echo "Parent $$ : $BASHPID"
+        (
+            echo "Subshell $$ : $BASHPID"
+        )
+
+        o/p: 
+            Parent 2450 : 2450
+            Subshell 2450 : 2510
+
+    $!
+		- Last background process id
+		
+		sleep 100 &
+		echo "Background process PID: $!"
