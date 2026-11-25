@@ -165,3 +165,94 @@ Indirect variable expansion:
     echo "${!VARIABLE_NAME}"
 
     # o/p: threads
+
+Command substitution:
+    - to store and use output of command 
+    - syntax:
+        $(command)
+    
+    ex. 
+        today=$(date +%Y-%m-%d)
+        backup_filename="backup-${today}.tar.gz"
+
+    - nested command substitution
+        result=$(echo "Today is $(date +%A)")
+
+    Subshell behaviour:
+        - command inside substitution block executes in subshell environment
+        - ex. 
+            name="Mitesh"
+            result=$(name="John"; echo "$name")
+            echo "Name: $name"
+            echo "Result: $result"
+
+        - o/p:
+            Name: Mitesh
+            Result: John
+
+        Subshell and working directory:
+            echo "Before: $(pwd)"
+            result=$(cd /tmp; pwd)
+            echo "Captured: $result"
+            echo "After: $(pwd)"
+
+            o/p:
+            Before: /mnt/c/Users/miteshch/Documents/Personal/Devops/3. Linux/scripts
+            Captured: /tmp
+            After: /mnt/c/Users/miteshch/Documents/Personal/Devops/3. Linux/scripts
+
+Tilde expansion:
+    ~ represent users home directory without writing complete path.
+
+    ex. 
+        echo ~          # /home/mitesh
+
+    ex. 
+        ~/Documents
+        ~root           # root users home directory
+        ~username       # specified users home directory
+        ~+              # current working directory
+        ~-              # previous working directory
+
+Brace Expansion:    
+    - Brace expansion generates multiple strings from a single expression.
+    - Syntax:
+        {value1,value2,value3}
+
+    - ex. 
+        mkdir -p /opt/app{dev,test,prod}
+        # it create three specified directory in /opt/app
+    
+    - combine brace expansion
+        echo {dev,prod}-{frontend,backend}
+        o/p: dev-frontend dev-backend prod-frontend prod-backend
+
+Pathname Expansion:
+    - also called globbing 
+    - allows Bash to match filenames and directory names using wildcard patterns.
+    - Do not use Double quotes around pathname expansion
+    
+    - * match zero or more characters
+        - if we want to list all log file 
+            ls *.log
+        - if we want to match all files and directory starting with app 
+            ls app*
+        - if we want to match all file and directory contains log 
+            ls *log*
+
+    - ? match exactly one character
+        - ls app?.log
+
+    - [] Matches one character from a specified set or range
+        - [] called character classes
+        - match exactly one character from a specified set.
+        - ex. 
+            ls app[123].log
+        - matches with 
+            app1.log 
+            app2.log
+            app3.log
+
+        - negation
+            ls app[!0-9].log
+            # doesn't match the app having digit after app
