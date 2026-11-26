@@ -131,6 +131,19 @@ Exit status and exit codes:
                 echo "First command: ${PIPESTATUS[0]}"
                 echo "Second command: ${PIPESTATUS[1]}"
 
+exit:
+	- command to terminate current shell or script and optionally return exit status
+	- syntax: exit [status]
+	
+	Example:
+		if [ -f "config.txt" ]; then
+		    echo "Configuration file found"
+		    exit 0
+		else
+		    echo "Configuration file not found"
+		    exit 1
+		fi
+
 Variables related to shell process:
     $$ : 
         - process ID of the shell that started the current Bash execution environment.

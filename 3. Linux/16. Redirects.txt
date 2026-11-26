@@ -1,21 +1,88 @@
-Redirect:
-    - redirect result of command output to files.
+Redirection:
+    - it allows you to change the default input or output destination of a command.
 
-    > : output redirection
-        - it replace content not append
+    1. Output redirection >
+        - it redirect standard output to file 
+        - if file already exist with some content, override it
+        - syntax:
+            command > filename
 
-        ls > file.txt           # Write output to file (overrides)
-        echo "hello" > file.txt # replace content of file with Hello
-        history | grep sudo > history.txt
+        ex. 
+            ls > file.txt
+            echo "hello" > file.txt
+            history | grep sudo > history.txt
 
-    >> : append redirection 
-        ls >> file.txt          # Append output to file
-        echo "world" >> file.txt    # write world into file.txt
-        history | grep sudo >> history.txt
+    2. Append redirection >> 
+        - redirect standard output to file
+        - if file already exist with some content, append the content
 
-    < : input redirection
-        sort < file.txt         # Use file as input
+        ex. 
+            ls >> file.txt
+            echo "world" >> file.txt
+            history | grep sudo >> history.txt
+
+    3. Input redirection <
+        - it takes standard input from file
+
+        ex. 
+            sort < names.txt
+
+    4. Error redirection 2> and 2>>
+        syntax command 2> error.txt
+
+        ex. 
+            ls /nonexistent_directory 2> error.txt      # add
+            ls /nonexistent_directory 2>> error.txt     3 append
+
+    5. Redirect stdout and stderr together &> and &>>
+        ls /home /invalid_directory &> output.log       # override 
+        ls /home /invalid_directory &>> output.log      # append
+
+    6. File descriptor duplication (2>&1)
+        ping google.com > /dev/null 2>&1
+
+        - redirect stderr(2) to wherever stdout(1) is currently pointing
+		- ping google.com > means ping google.com 1>
+		- so stdout is pointing to /dev/null, so error will also go there.
+
+        What if ping google.com 2>&1 > /dev/null?
+            - stderr is redirected to the current stdout destination (usually the terminal).
+            - stdout is redirected to output.log.
+            - so both will not go to /dev/null
+
+    7. Redirect stdout to stderr (1>&2) or >&2
+        echo "This is an error message" 1>&2
         
+        - normally echo writes to stdout 
+        - but we redirect stout to where stderr is pointing.
+
+        use case:
+            - writing function or logic where we want to send message as error
+
+    8. Redirect multiple streams:
+        - You can redirect stdin, stdout and stderr independently.
+        - command < input.txt > output.txt 2> error.txt
+
+    9. Redirect output inside function:
+        deploy() {
+            echo "Starting deployment"
+            echo "Building Docker image"
+            echo "Deploying application"
+        }
+        deploy > deployment.log
+
+        - output will go to deployment.log
+
+    10. Redirecting output inside loops
+        for server in server1 server2 server3
+        do
+            echo "Checking $server"
+        done > servers.log
+
+/dev/null:
+    - it called null device
+    - whatever written to it got discarded
+    
 tee:
     - The tee command reads input from stdin, writes it to stdout (your terminal), and 
       simultaneously writes it to one or more files.

@@ -65,3 +65,10 @@ Bash syntax rules:
 		
 		aws ec2 create-instance \
 			--type=t3.micro
+
+null:
+	- : is called null command 
+	- it does nothing and always return 0 (success)
+	- used in scripting for 
+		- creating empty command blocks
+		- writing infinite loops
