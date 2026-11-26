@@ -24,3 +24,13 @@ Bash:
 
 		# here string and here document
 		read name role <<< "Mitesh DevOps"
+
+	File conditions:
+        Condition	Meaning	                          Example
+        -e file	    file exists	                        [ -e myfile.txt ]
+        -f file	    file exists and is a regular file	[ -f /etc/passwd ]
+        -d file	    file exists and is a directory	    [ -d config ]
+        -r file	    file is readable	                [ -r data.txt ]
+        -w file	    file is writable	                [ -w output.log ]
+        -x file	    file is executable	                [ -x script.sh ]
+        -s file	    file exists and size > 0	        [ -s log.txt ]
