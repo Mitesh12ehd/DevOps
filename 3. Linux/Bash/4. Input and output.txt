@@ -122,6 +122,16 @@ Here document:
         }
         EOF
 
+    - using here document with loops:
+        while read service
+        do 
+            echo "Processing: $service"
+        done <<EOF
+        nginx
+        docker
+        jenkins
+        EOF
+
     - preventing variable expansion
         APP_NAME="threads-app"
         cat <<'EOF'
@@ -135,3 +145,49 @@ Here strings:
 
     - ex. 
         cat <<< "Hello Mitesh"
+
+Named pipe FIFO
+    - it is specific file that allow two or more process to communicate by passing data between them.
+    - Unlike normal file 
+        - data is not permanently stored
+        - one process writes data into it
+        - another process reads data from it
+        - data consumed in order of it was return
+
+    Creating named pipe:
+        mkfifo mypipe
+
+    Verify file created 
+        ls -l mypipe
+        # prw-r--r-- 1 user user 0 Nov 26 10:00 mypipe
+        file mypipe 
+        # mypipe: fifo (named pipe)
+
+        - we can see file type is named pipe
+
+    Writing data into named pipe
+        echo "Hello from writer" > mypipe
+
+        - named pipe normally blocks the writer until a reader opens the other end.
+
+    Reading the data from named pipe
+        cat mypipe
+
+        - we can read data that is writer have written
+        - now writer is closed
+
+    behavior:
+        Opening FIFO for reading : Normally waits until a writer opens it
+        Opening FIFO for writing : Normally waits until a reader opens it
+        Reading FIFO : Waits when no data is available and the writer remains open
+        Writing FIFO : Can block when the pipe buffer is full
+
+    Named pipes with background processes
+        - we can also run reader and writer in single terminal 
+        ex. 
+            mkfifo /tmp/myfifo
+            cat /tmp/myfifo &
+            reader_pid=$!
+            echo "Hello from writer" > /tmp/myfifo
+            wait "$reader_pid"
+            rm /tmp/myfifo

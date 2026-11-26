@@ -53,17 +53,6 @@ exit:
 		    exit 1
 		fi
 
-set -e 
-	– Exit on command failure:
-	- if any command fails, script exits
-
-set -o pipefail
-	- command1 | command2 | command3
-	- pipeline's exit status is normally the status of command3.
-	- what if command 1 fails and and command 3 succeeds, pipeline report success
-	- To catch failures in pipelines:
-		set -o pipefail
-
 null:
 	- : is called null command 
 	- it does nothing and always return 0 (success)

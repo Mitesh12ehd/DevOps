@@ -1,0 +1,97 @@
+Error handling:
+    - detecting command failure, 
+    - how script should respond on failures
+
+Checking error status:
+    1. using $?
+    2. using if
+
+Conditional error handling  
+    1. using &&
+        mkdir /tmp/project && echo "Directory created"
+    2. using ||
+        mkdir /tmp/project || echo "Directory creation failed"
+    3. combine 
+        mkdir /tmp/project && echo "Success" || echo "Failure"
+
+Error handling options:
+    - bash provide options that influence how script behaves when error occurs
+
+    set -e
+        - exit on error
+        - usually bash continues script even when any command fails
+        - by set -e, bash exits on error.
+        - similar is 
+            set -o errexit
+
+        ex. 
+            #!/bin/bash
+            set -e
+            mkdir /tmp/project
+            echo "Creating files..."
+            touch /tmp/project/file.txt
+            echo "Script completed"
+
+        Exception:
+            - set -e not terminate script when  command is 
+                - used in if condition
+                - used in while or until condition
+                - Used in non final position of && or ||
+                    # in both below ex. false is non-final command
+                    # echo is final command
+                    false && echo "Second command"
+                    false || echo "Fallback executed"                
+                - Used in a non-final position of a pipeline (unless pipefail changes the pipeline status).
+                    - last command is final command
+                - negated using !
+                    - if final result after negation become true, script continues
+                    - if final result after negation become false, script termination if set -e is there.
+
+    set -u
+        - treat unset variable as error.
+        - similar is 
+            set -o nounset
+        - ex. 
+            #!/bin/bash
+            set -u
+            echo "Username: $username"
+            echo "Script continues"
+        - o/p:
+            setup.sh: line 5: username: unbound variable
+
+    set -o pipefail
+        - Detect pipeline failure
+        - usually pipeline exit status is status of last command
+        - this can hide failures of command except last command
+        - use 
+            set -o pipefail
+            false | true
+            echo $?
+        - o/p:
+            1
+    
+    
+        - it do same function as set -e
+
+    set -x
+        - similar is set -o xtrace
+        - print command as bash executes them
+        - ex. 
+            #!/bin/bash
+            set -x
+            name="Mitesh"
+            echo "Hello $name"
+            mkdir /tmp/demo
+        - o/p:
+            + name=Mitesh
+            + echo 'Hello Mitesh'
+            Hello Mitesh
+            + mkdir /tmp/demo
+        
+        - sign + indicate traced command
+
+        set +x
+            - disable tracing
+    
+    set -E
+        - similar is set -o errtrace

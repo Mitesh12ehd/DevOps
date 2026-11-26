@@ -1,0 +1,323 @@
+trap:
+    - normally bash executes command sequentially.
+    - sometime event occurs such as 
+        - command fails
+        - script is about to exit 
+        - user press ctrl+c
+        - another process sends termination signal
+        - function returns 
+    
+    - trap command it used to execute specific command when these event occur.
+    - syntax:
+        trap 'commands' SIGNAL
+    - ex.
+        #!/bin/bash
+        trap 'echo "Script is exiting"' EXIT
+        echo "Starting script"
+        echo "Doing some work"
+        echo "Finishing script"
+    - o/p:
+        Starting script
+        Doing some work
+        Finishing script
+        Script is exiting
+    - here when finishing script statement done, script is comes to exit, 
+      on EXIT signal, defined logic in trap executes.
+
+    - ex. 
+        trap 'echo "Interrupted!"' INT
+        echo "Script started"
+        sleep 30
+        echo "Script completed"
+    - execute:
+        - run the script 
+        - press ctrl + c (it will generate interrupt signal)
+    - o/p:
+        Script started
+        ^C
+        Interrupted!
+        Script completed
+
+    - Removing trap
+        - remove previously registered trap 
+        - trap - INT
+        - after removing trap, on that signal nothing happens
+
+        ex. 
+            trap 'echo "Interrupted!"' INT
+            echo "Trap is active. Press Ctrl+C."
+            sleep 10
+            # Remove the INT trap
+            trap - INT
+            echo "Trap removed. Press Ctrl+C now."
+            sleep 10
+            echo "Script completed"
+    
+    - Ignore signal
+        trap '' INT
+        - now bash will ignore interrupt signal, rather than executing handler
+
+        ex. 
+            #!/bin/bash
+            trap '' INT
+            echo "Script started"
+            echo "Try pressing Ctrl+C. It will be ignored."
+            sleep 30
+            echo "Script completed"
+
+        - if we press ctrl + c during this, it will be ignored
+
+    - List registered traps 
+        trap -p
+    
+    - Inspect specific signal 
+        trap -p INT
+
+ERR trap
+    - ERR trap executes when command returns non-zero exit status
+    - exception are similar that set -e have.
+    syntax: 
+        trap 'commands' ERR
+    
+    example:
+        #!/bin/bash
+        trap 'echo "An error occurred!"' ERR
+        echo "Step 1"
+        ls /nonexistent_directory
+        echo "Step 2"
+    output:
+        Step 1
+        ls: cannot access '/nonexistent_directory': No such file or directory
+        An error occurred!
+        Step 2
+    
+    - it doesn't terminate the script, we can by exit command
+        trap 'echo "Error occurred"; exit 1' ERR
+    - ERR trap with exit status
+        - exit status of failed command
+        - trap 'echo "Failed with exit code: $?"' ERR
+        
+        $BASH_COMMAND
+        - check command which triggered error using 
+        - ex. 
+            trap 'echo "Failed command: $BASH_COMMAND, Exit code: $?"' ERR
+            ls /invalid_directory
+        - o/p: Failed command: ls /invalid_directory, Exit code: 2
+
+EXIT trap
+    - The EXIT trap executes whenever the shell is about to exit.
+    syntax: 
+        trap 'commands' EXIT
+
+    - it will be useful for cleanup things
+    
+    example:
+        #!/bin/bash
+        trap 'echo "Cleaning up resources"' EXIT
+        echo "Starting script"
+        mkdir -p /tmp/bash-demo
+        echo "Working..."
+        exit 0
+    output:
+        Starting script
+        Working...
+        Cleaning up resources
+
+set -o errtrace or set -E
+    - error trap is registered in main shell, it is not automatically inherited by shell function, substitution and subshell 
+      environment
+    - set -o errtrace enables inheritance of ERR trap into 
+        - shell function 
+        - command substitution
+        - subshell environment
+    
+    - without errtrace
+        #!/bin/bash
+        trap 'echo "ERR trap executed"' ERR
+        my_function() {
+        echo "Inside function"
+            false
+            echo "Function completed"
+        }
+        echo "Calling function"
+        my_function
+        echo "Script completed"
+
+        o/p:
+            Calling function
+            Inside function
+            Function completed
+            Script completed
+
+    - with errtrace
+        #!/bin/bash
+        set -o errtrace
+        trap 'echo "ERR trap executed"' ERR
+        my_function() {
+            echo "Inside function"
+            false
+            echo "Function completed"
+        }
+        echo "Calling function"
+        my_function
+        echo "Script completed"
+
+        o/p:
+            Calling function
+            Inside function
+            ERR trap executed
+            Function completed
+            Script completed
+
+DEBUG trap:
+    - it execute before each command
+    - useful for deubgging
+
+    - ex. 
+        trap 'echo "DEBUG: Executing: $BASH_COMMAND"' DEBUG1
+        echo "Hello"
+        x=10
+        ls
+    - o/p:
+        DEBUG: Executing: echo "Hello"
+        Hello
+        DEBUG: Executing: x=10
+        DEBUG: Executing: ls
+        ...
+
+RETURN trap:
+    - The RETURN trap executes whenever a 
+        - shell function finishes
+        - sourced script finishes executing.
+    - ex. 
+        trap 'echo "RETURN: Function execution completed"' RETURN
+
+        function_one() {
+            echo "Function one started"
+            echo "Function one working"
+        }
+
+        function_two() {
+            echo "Function two started"
+            function_one
+            echo "Function two completed"
+        }
+
+        function_two
+
+    - o/p:
+        Function two started
+        Function one started
+        Function one working
+        RETURN: Function execution completed
+        Function two completed
+        RETURN: Function execution completed
+
+    - here both time RETURN trap executed because function is defined in main environment, 
+
+    - Example of source script
+        main.sh
+            #!/bin/bash
+            trap 'echo "RETURN trap executed"' RETURN
+            source ./config.sh
+            echo "Main script continues"
+        config.sh 
+            echo "Loading configuration"
+        output:
+            Loading configuration
+            RETURN trap executed
+            Main script continues   
+    
+set -o functrace or set -T 
+    - it control inheritance of below two traps 
+        - DEBUG 
+        - RETURN
+
+    - for return:
+    
+        ex. 
+            #!/bin/bash
+            trap 'echo "RETURN trap executed"' RETURN
+            outer_function() {
+                inner_function() {
+                    echo "Inside inner function"
+                }
+                inner_function
+                echo "Inside outer function"
+            }
+            outer_function
+
+        o/p:
+            - without set -o functrace
+                Inside inner function
+                Inside outer function
+                RETURN trap executed 
+
+            - with set -o functrace
+                Inside inner function
+                RETURN trap executed
+                Inside outer function
+                RETURN trap executed
+
+INT trap
+    - it represent signal SIGINT 
+    - it also generate when user press ctrl + c in running process.
+
+    ex. 
+        #!/bin/bash
+        trap 'echo "Interrupt received"' INT
+        echo "Script started"
+        sleep 30
+        echo "Script completed"
+
+    - if you also want to stop the script when pressing ctrl + c
+        #!/bin/bash
+        trap 'echo "User interrupted the script"; exit 130' INT
+        echo "Starting deployment"
+        sleep 30
+        echo "Deployment completed"
+
+TERM trap
+    - represent signal SIGTERM
+    - It is generally sent when another process wants a running process to terminate gracefully.
+    - ex. 
+        #!/bin/bash
+        trap 'echo "Termination signal received"' TERM
+        echo "Script started"
+        while true
+        do
+            echo "Working..."
+            sleep 2
+        done
+    
+    - Run script in background
+        ./script.sh &
+    - Find pid 
+        echo $!
+    - send SIGTERM 
+        kill -TERM PID
+    - TERM handler executes 
+        - but script continue to execute
+        - because we haven't done termination
+        - we can do exit with valid exit status in trap handler
+
+Practical example:
+
+    #!/bin/bash
+
+    set -Eeuo pipefail
+
+    TEMP_DIR=$(mktemp -d)
+
+    cleanup() {
+        echo "Cleaning temporary directory"
+        rm -rf -- "$TEMP_DIR"
+    }
+
+    trap cleanup EXIT
+
+    echo "Working directory: $TEMP_DIR"
+
+    touch "$TEMP_DIR/file.txt"
+
+    echo "Processing completed"

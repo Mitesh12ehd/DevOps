@@ -7,9 +7,20 @@ TODOS:
 	
 Commands:	
 	- bc: bash calc to perform floating point arithmetic
+	- file: to find file type
 
 Bash:
 	- process substitution
-	- echo "20" | read count, what are all the way where read receive output from somewhere else, instead of user
-	  use case: iterating over each line of file 
-	            providing input to while loop
+
+	read command:
+		- echo "20" | read count, what are all the way where read receive output from somewhere else, instead of user
+		use case: iterating over each line of file 
+					providing input to while loop
+
+		printf "nginx\napache\nmysql\n" | while read service
+		do
+			echo "Checking service: $service"
+		done
+
+		# here string and here document
+		read name role <<< "Mitesh DevOps"
