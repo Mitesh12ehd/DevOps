@@ -1,26 +1,3 @@
-Debug bash script:
-    - using -x
-    - execute script with -x option
-    - it shows all the command that is running
-        + greet Mitesh
-        + local name=Mitesh
-        + echo 'Hello Mitesh'
-        Hello Mitesh
-
-Enable debugging inside script:
-    - enable using set -x 
-    - disable using set +x
-
-    ex. 
-        echo "Starting script"
-        set -x
-        name="Mitesh"
-        age=25
-        echo "Name: $name"
-        echo "Age: $age"
-        set +x
-        echo "Script completed"
-
 Inspect existing function:
     
     # display function definition
@@ -34,3 +11,79 @@ Inspect existing function:
 
     # List all currently defined Functions
     declare -F
+
+bash -n
+    - to check bash script syntax errors without executing it
+    - syntax:
+        bash -n filename.sh
+
+bash -x
+    - execute script with displaying each command before bash executes it
+    - ex.
+        #!/bin/bash
+        name="Mitesh"
+        environment="production"
+        echo "Starting deployment"
+        echo "Deploying $name application to $environment"
+        echo "Deployment completed"
+    - execute 
+        bash -x setup.sh 
+    - output    
+        + name=Mitesh
+        + environment=production
+        + echo 'Starting deployment'
+        Starting deployment
+        + echo 'Deploying Mitesh application to production'
+        Deploying Mitesh application to production
+        + echo 'Deployment completed'
+        Deployment completed
+
+set -x and set +X
+    - to debug particular section in script
+    - set -x enable debugging 
+    - set +X disable debugging
+    - we can execute script without -x option
+
+    - example:
+        #!/bin/bash
+        name="Mitesh"
+        echo "Starting script"
+        set -x
+        echo "Hello $name"
+        mkdir test_directory
+        set +x
+        echo "Script completed"
+    - output:   
+        Starting script
+        + echo 'Hello Mitesh'
+        Hello Mitesh
+        + mkdir test_directory
+        + set +x
+        Script completed
+
+Debugging variable values:
+    - to inspect the variable value use
+        echo 
+        printf
+    - ex.
+        #!/bin/bash
+        APP_NAME="myapp"
+        APP_VERSION=""
+        printf "APP_NAME: [%s]\n" "$APP_NAME"
+        printf "APP_VERSION: [%s]\n" "$APP_VERSION"
+    
+    - why []
+        - to properly check white spaces
+
+ShellCheck for identifying common issues
+    - tool to analysis of shell scripts 
+        - common mistakes
+        - suspicious code  
+        - quoting problems,
+        - possible bugs
+
+    - install 
+        sudo apt install shellcheck
+
+    - check script 
+        shellcheck setup.sh

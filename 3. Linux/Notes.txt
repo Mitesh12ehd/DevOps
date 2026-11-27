@@ -1,9 +1,9 @@
 TODOS:
 	- search for linux concept and command that is remaining
-	- Zombie and orphan process
 	- How to measure load of server?		
 	- Linux production broke fix?
 	- Production scenario and questions?
+	- design one production level scenario games using AI tool.
 	
 Commands:	
 	- bc: bash calc to perform floating point arithmetic
