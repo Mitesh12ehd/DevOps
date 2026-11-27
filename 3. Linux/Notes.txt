@@ -25,6 +25,10 @@ Bash:
 		# here string and here document
 		read name role <<< "Mitesh DevOps"
 
+		- read -a # read array
+
+		- what is IFS is
+
 	File conditions:
         Condition	Meaning	                          Example
         -e file	    file exists	                        [ -e myfile.txt ]

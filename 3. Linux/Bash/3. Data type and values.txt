@@ -146,8 +146,8 @@ Integer attribute using declare -i:
     echo $result
 
 declare and typeset
-    - both keyword do the same work
-    - note: it create local variable by default, so you use inside function also
+    
+    - note: 
 
     declare name="Mitesh"
     typeset city="Ahmedabad"
@@ -166,3 +166,33 @@ declare and typeset
         declare -x ENVIRONMENT="production"
         declare -a servers=("web1" "web2")
         declare -A ports=([http]=80 [https]=443)
+
+declare or typeset
+    - both keyword do the same work
+    - to create variables and assign special attributes to them.
+    - declare allows us to control how variable behaves
+    - we can create 
+        - integer variable 
+        - create arrays and associative array
+        - readonly variables
+        - nameref variable
+        - scoped variables for function
+
+    - it create local variable by default, so you use inside function also
+    
+    - syntax:
+        declare [options] variable=value
+
+    option:
+        no option: create ordinary variable 
+        -i : create integer variable 
+        -a : indexed array 
+        -A : associative array 
+        -r : read only variable 
+        -x : to export variable for child process.
+        -p : it show variable declaration
+        -l : Convert assigned values to lowercase
+        -u : Convert assigned values to uppercase
+        -n : Create a nameref variable
+        -g : Create a global variable, even inside a function
+        -f : Display function definitions

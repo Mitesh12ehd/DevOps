@@ -1,0 +1,245 @@
+eval:
+    - it take string as, interpret as shell command executes it. 
+    - ex.   
+        command="echo Hello bash"
+        eval "$command"
+    - ex.   
+        service="nginx"
+        action="status"
+        command="systemctl $action $service"
+        eval "$command"
+
+    - using eval with variables
+        name="Mitesh"
+        variable_name="name"
+        eval "echo \$$variable_name"
+
+        o/p:
+            Mitesh
+    
+    Problem: Command injection 
+        - eval executes interpreted shell code, untrusted input can introduce additional commands.
+
+    Alternative to eval for dynamically constructed command
+        
+        1. arrays:
+            file="application logs.txt"
+            command=(cat "$file")
+            "${command[@]}"
+        
+        2. for dynamic variable access use indirect variable expansion
+
+exec:
+    - command with two major purpose 
+        1. process replacement: Replace current shell process with another command
+        2. file descriptor manipulation: change the current shell's standard input, standard output and standard error permanently.
+
+    Process replacement using exec:
+        - ex. 
+            #!/bin/bash
+            echo "Before exec"
+            exec sleep 10
+            echo "After exec"
+        - o/p:
+            Before exec
+        - behavior:
+            - if we execute this script, 
+            - it replace current bash process with sleep process 
+            - pid will remain same
+
+    File descriptor manipulation using exec:
+        - linux commands have three standard file descriptor
+            0 - stdin 
+            1 - stdout
+            2 - stderr
+        - normally redirection works for single command
+            echo "Hello" > output.log
+
+        - Redirect all stdout using exec 
+            ex. 
+                #!/bin/bash
+                echo "Message 1"
+                exec > output.log
+                echo "Message 2"
+                echo "Message 3"
+                ls
+                echo "Message 4"
+            o/p in terminal:
+                Message 1
+            output.log 
+                Message 2
+                Message 3
+                file1
+                file2
+                Message 4
+
+        - Redirect stdout and stderr 
+            exec > application.log 2>&1
+
+        - Redirect stdin using exec 
+            #!/bin/bash
+            exec < input.txt
+            while IFS= read -r line; do
+                echo "Read: $line"
+            done
+
+        - Using exec to save and restore file descriptors
+            - if we want to redirect stdout temporary and restore it.
+            - we can do this using custom file descriptor
+
+            ex. 
+                #!/bin/bash
+
+                # Save original stdout in FD 3
+                exec 3>&1
+
+                # Redirect stdout to a file
+                exec > output.log
+
+                echo "This goes to the log file"
+
+                # Restore original stdout from FD 3
+                exec 1>&3
+
+                echo "This goes to the terminal"
+
+                # Close FD 3
+                exec 3>&-
+
+        Using exec with custom file descriptor
+            #!/bin/bash
+            exec 3> custom.log
+            echo "This goes to terminal"
+            echo "This goes to custom.log" >&3
+            exec 3>&-
+
+mapfile / readarray
+    - both command functions same 
+    - to read multiple line of input and store directly in indexed array
+    - syntax:
+        mapfile [OPTIONS] ARRAY_NAME
+
+    - example 1. reading data from multiline
+        mapfile fruits <<EOF
+        Apple
+        Mango
+        Banana
+        EOF
+
+        echo "${fruits[0]}"
+        echo "${fruits[1]}"
+
+    - example 2. reading data from file     
+        servers.txt 
+            192.168.1.10
+            192.168.1.11
+            192.168.1.12
+            192.168.1.13
+        read 
+            mapfile servers < servers.txt
+
+    - example 3. reading command output into an array 
+        mapfile containers < <(docker ps -q)
+
+    - useful options:
+        -t : Remove trailing new line 
+            mapfile -t fruits <<EOF
+            Apple
+            Mango
+            Banana
+            EOF
+
+        -n : read limited number of lines
+            mapfile -t -n 2 fruits <<EOF
+            Apple
+            Mango
+            Banana
+            Orange
+            EOF
+        
+        -s : skip initial lines
+            mapfile -t -s 2 fruits <<EOF
+            Apple
+            Mango
+            Banana
+            Orange
+            EOF
+
+        - d : custom delimiter
+            data="Apple,Mango,Banana,Orange"
+            mapfile -d ',' fruits <<< "$data"
+
+BASH_SOURCE:    
+    - BASH_SOURCE is a special Bash array that stores the filenames of source files involved in the current function-call stack.
+    - ex. 
+        bash-project/
+        ├── main.sh
+        ├── library.sh
+        └── helper.sh
+
+        main.sh
+            #!/bin/bash
+            source ./library.sh
+        
+        library.sh 
+            #!/bin/bash
+            source ./helper.sh
+            library_function
+        
+        helper.sh
+            #!/bin/bash
+            library_function() {
+                echo "BASH_SOURCE[0]: ${BASH_SOURCE[0]}"
+                echo "BASH_SOURCE[1]: ${BASH_SOURCE[1]}"
+                echo "BASH_SOURCE[2]: ${BASH_SOURCE[2]}"
+            }
+
+        execute:    
+            ./main.sh
+        
+        output:
+            BASH_SOURCE[0]: ./helper.sh
+            BASH_SOURCE[1]: ./library.sh
+            BASH_SOURCE[2]: ./main.sh
+
+FUNCNAME
+    - it is special array that store function present in stacks
+    - ex. 
+        #!/bin/bash
+        function function_c() {
+            echo "Inside function_c"
+            echo "${FUNCNAME[@]}"
+        }
+        function function_b() {
+            function_c
+        }
+        function function_a() {
+            function_b
+        }
+        function_a
+
+    - output:
+        function_c function_b function_a main
+
+BASH_LINENO:
+    - it is special array that store function present in stacks
+    - ex. 
+        #!/bin/bash
+        function function_c() {
+            echo "Inside function_c"
+            echo "${FUNCNAME[@]}"
+        }
+        function function_b() {
+            function_c
+        }
+        function function_a() {
+            function_b
+        }
+        function_a
+    - output:   
+        Inside function_c
+        8 11 13 0
+
+BASH_VERSION
+    # contains bash version of shell currently executing 
+    echo "Bash version: $BASH_VERSION"

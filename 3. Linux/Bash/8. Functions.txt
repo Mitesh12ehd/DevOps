@@ -76,9 +76,9 @@ Pass by reference:
     - normally bash passes variable as pass by value
     - but there is one way to implement pass by reference similar concept.
 
-    Nameref variables using local -n:
+    Nameref variables using local -n or declare -n:
         - A nameref is a variable that refers to another variable by its name.
-        - syntax: local -n reference_name=variable_name
+        - syntax: local -n reference_name=variable_name     
 
     ex.
         update_value() {

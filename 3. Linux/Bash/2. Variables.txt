@@ -127,12 +127,26 @@ Scope of variable:
 			Function B: Local
 			Outside: Global
 
-Read-only variables
-	- The readonly command makes a variable immutable within the current shell.
-	APP_NAME="Threads"
-	readonly APP_NAME
-	readonly APP_PORT=8080
-	declare -r APP_DB="postgres"
+Read-only:
+	
+	- variables
+		- The readonly command makes a variable immutable within the current shell.
+
+		APP_NAME="Threads"
+		readonly APP_NAME
+		readonly APP_PORT=8080
+		declare -r APP_DB="postgres"
+
+	- function:
+		- readonly marked function can't be overrided.
+
+	- ex. 
+		#!/bin/bash
+		deploy() {
+			echo "Deploying application"
+		}
+		readonly -f deploy
+		# now deploy can't be overrided
 
 Special variables in bash:
 
